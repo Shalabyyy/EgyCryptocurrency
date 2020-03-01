@@ -35,6 +35,24 @@ public class SHA256 {
 
 		return hexString.toString(); 
 	} 
+	public static String hashValue(String val){
+		try {
+			return toHexString(getSHA(val));
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+			return "Error";
+		}
+	}
+	public static String mergeHash(String hash1, String hash2){
+		String mergedhash = hash1+hash2;
+		try {
+			return toHexString(getSHA(mergedhash));
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+			return "Error";
+		}
+		
+	}
 
 	// Driver code 
 	public static void main(String args[]) 
