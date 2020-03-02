@@ -1,72 +1,140 @@
-Files in Java might be tricky, but it is fun enough!Block Number 0
+**********START OF BLOCK**********
 Block ID: 0
 Block Hash: b7e167be8d7deebff691f9aa018bd49a94cff7e7c1e21d991b016a9520fa74e9
 Previous Block Hash: 0
 Nonce: 0
-Timestamp: 1583166975128
+Timestamp: 1583178094260
 Merkle Root: 
 Transactions: 
-Block Number 1
+**********END OF BLOCK**********
+ 
+**********START OF BLOCK**********
 Block ID: 1
-Block Hash: 2aa9306942878c187e63bd6b49b580029775be3f1040f8ab7983c6879fc995fc
+Block Hash: 9c3d65d1e19e4328083d68e564c3fad8499e1728fffcc76c9a89e6dc87308b89
 Previous Block Hash: b7e167be8d7deebff691f9aa018bd49a94cff7e7c1e21d991b016a9520fa74e9
 Nonce: 1024
-Timestamp: 1583166975118
-Merkle Root: f94b3bbb53bb934ff84a63b468afed4dc5f647a62f9c4a1e673eb895cff1736d
+Timestamp: 1583178094250
+Merkle Root: 95dc9288b12163a5fa6ec71773172e7e19d4f5a344ad56b141ef6d9e04575b21
 Transactions: 
-Transaction Number: 1d8ead09b8ba370296aa0e67e4177df5cc8fea2d53d30d4a4a398740a05ff290
+Transaction Number: c3d482e03c0b6dd6a72448d01d61fd4efea74eff8cc411ac9f578abf7913a808
 Sender: f4a4ce5fa6340a35aa5db0b4b6d31a6fbaa6052356460dbb0537657d803f5be2
 Receipeint: e9058ab198f6908f702111b0c0fb5b36f99d00554521886c40e2891b349dc7a1
 Ammount: 15.0
-Timestamp: 1583166975098
---------------------------------------------------------------------------
-Transaction Number: 2b7c085ef315ceaecbc04df54502850c0e96d60cc5d741cf484ab8e323c4f61
+Timestamp: 1583178094227
+Transaction Number: 948d9b30c43f58b156058116a40705d8c54d2349c02bc25091502034478a4bfa
 Sender: f488ce5fa6340a35aa5db0b4b6d31a6fbaa6052356460dbb0537657d803f5be2
 Receipeint: e9058ab198f6908f702111abc3b5b36f99d00554521886c40e2891b349dc7a1
 Ammount: 3.0
-Timestamp: 1583166975117
---------------------------------------------------------------------------
-Transaction Number: eb91b60c86319ccfd2a58f00c6d1adcd675800e1ef054212634363f19604cbc8
+Timestamp: 1583178094249
+Transaction Number: 73da91fd16b516c1ad54abde8eb306e0ab482dc3c50df8a82e0f06654589c9bb
 Sender: f488ce5fa6340a35aa5db0b4b6d31a6fbaa6052356460dbb0537657d803f5be2
 Receipeint: e9058ab198f6908f702111abc3b5b36f99d00554521886c40e2891b349dc7a1
 Ammount: 6.0
-Timestamp: 1583166975117
---------------------------------------------------------------------------
-Transaction Number: e7538ae22e68d5de5c727d50b5869f519c9a5927332e6ed5238036a5d4d6e5fc
+Timestamp: 1583178094249
+Transaction Number: 8dc90da2d45420221c6a882e6042dea3cd8f1b05b755ca9a9e3bdcf269a8605e
 Sender: a7yyce5fa6340a35aa5db0b4b6d31a6fbaa6052356460dbb0537657d803f5be2
 Receipeint: x9gh8ab198f6908f702111abc3b5b36f99d00554521886c40e2891b349dc7a1
 Ammount: 5.5
-Timestamp: 1583166975117
---------------------------------------------------------------------------
-Block Number 2
+Timestamp: 1583178094250
+**********END OF BLOCK**********
+ 
+**********START OF BLOCK**********
 Block ID: 1
-Block Hash: 636fe962ecbf06ad5d2487dc597029dfdce4d8cf1f64f7552a6ffcd7566c9ec3
-Previous Block Hash: 2aa9306942878c187e63bd6b49b580029775be3f1040f8ab7983c6879fc995fc
+Block Hash: be1cd7c729e54839095d114ff4d680fb9a54c4b67c2e661d7b1c9b26d6fea6ca
+Previous Block Hash: 9c3d65d1e19e4328083d68e564c3fad8499e1728fffcc76c9a89e6dc87308b89
 Nonce: 1024
-Timestamp: 1583166975121
-Merkle Root: 2fc895b983faf5cba6ce4251f26562c97c54836759be28514aff4a6f1985920b
+Timestamp: 1583178094254
+Merkle Root: f6ec3e8722df35b5ae3662754a10347199d0870a06fc512eed7aafdea656006f
 Transactions: 
-Transaction Number: a81733fb5826d63a5fb4f646443254b6aa564763cbe187e498ff769769b2b88b
+Transaction Number: 3c8da9f0ebf61a1f54185d264f27786b7220241813ba5cf224f2bebe8ae49413
 Sender: a4a4ce5fa6340a35aa5db0b4b6d31a6fbaa6052356460dbb0537657d803f5be2
 Receipeint: b9058ab198f6908f702111b0c0fb5b36f99d00554521886c40e2891b349dc7a1
 Ammount: 11.2
-Timestamp: 1583166975121
---------------------------------------------------------------------------
-Transaction Number: 39760bacfc4ae7ab6742bcc2d7bd4c796d4bfb5e885864d1b51049890e7c98c4
+Timestamp: 1583178094253
+Transaction Number: d6b297488f9be5f0e894ae3e69f4d6e5d26ef2ca512e01b38c1cf8be4443f24
 Sender: c488ce5fa6340a35aa5db0b4b6d31a6fbaa6052356460dbb0537657d803f5be2
 Receipeint: d9058ab198f69090102111abc3b5b36f99d00554521886c40e2891b349dc7a1
 Ammount: 0.6
-Timestamp: 1583166975121
---------------------------------------------------------------------------
-Transaction Number: 6855f12744ea5270752e68f8924c8cea3756d65f8c4d22b56a6bae8b6f529ab7
+Timestamp: 1583178094253
+Transaction Number: a2cf684207aa039b08f78e547b6619989bc2c18028f8971687d76b49e9439fb4
 Sender: e488ce5fa6340a35aa5db0b4b6d31a6fbaa6052356460dbb0537657d803f5be2
 Receipeint: k9058ab198f6908f702111abc3b5b36f99d00554521886c40e2891b349dc7a1
 Ammount: 22.0
-Timestamp: 1583166975121
---------------------------------------------------------------------------
-Transaction Number: abba8bc00bb8a7da30b20705aad52f413e153a66c97fe866ce7e0ff6f05514b6
+Timestamp: 1583178094254
+Transaction Number: 402598c8456a93d4e50c8561d958dce798dc6807f500b53789b7a85dd17365ad
 Sender: z7yyce5fa6340a35aa5db0b4b6d31a6fbaa6052356460dbb0537657d803f5be2
 Receipeint: asgh8ab198f6908f702111abc3b5b36f99d00554521886c40e2891b349dc7a1
 Ammount: 7.0
-Timestamp: 1583166975121
---------------------------------------------------------------------------
+Timestamp: 1583178094254
+**********END OF BLOCK**********
+ 
+**********START OF BLOCK**********
+Block ID: 0
+Block Hash: b7e167be8d7deebff691f9aa018bd49a94cff7e7c1e21d991b016a9520fa74e9
+Previous Block Hash: 0
+Nonce: 0
+Timestamp: 1583178169243
+Merkle Root: 
+Transactions: 
+**********END OF BLOCK**********
+ 
+**********START OF BLOCK**********
+Block ID: 1
+Block Hash: d76154c11083645a77311fd8bdd30512805b8634bbe20128337b7b3e2e14fa9a
+Previous Block Hash: b7e167be8d7deebff691f9aa018bd49a94cff7e7c1e21d991b016a9520fa74e9
+Nonce: 1024
+Timestamp: 1583178169235
+Merkle Root: 2a22cc138bb1eee3dc8a582eecf3e34490c9c771c177f76edb1e4a36e1b0e20d
+Transactions: 
+Transaction Number: e6916695331d8166dd34e4a232530c3f64d5c0c7f79f099139f68076e6cae447
+Sender: f4a4ce5fa6340a35aa5db0b4b6d31a6fbaa6052356460dbb0537657d803f5be2
+Receipeint: e9058ab198f6908f702111b0c0fb5b36f99d00554521886c40e2891b349dc7a1
+Ammount: 15.0
+Timestamp: 1583178169171
+Transaction Number: eb900ed16f94b94f98a14a5f3193079ca68dba21a78d35362c2e8a0152e52d8b
+Sender: f488ce5fa6340a35aa5db0b4b6d31a6fbaa6052356460dbb0537657d803f5be2
+Receipeint: e9058ab198f6908f702111abc3b5b36f99d00554521886c40e2891b349dc7a1
+Ammount: 3.0
+Timestamp: 1583178169234
+Transaction Number: 2771cba06b1a97de7729f9b2cd88be1b620706255b6df7867d337d35b530cf52
+Sender: f488ce5fa6340a35aa5db0b4b6d31a6fbaa6052356460dbb0537657d803f5be2
+Receipeint: e9058ab198f6908f702111abc3b5b36f99d00554521886c40e2891b349dc7a1
+Ammount: 6.0
+Timestamp: 1583178169234
+Transaction Number: b35173d1986d26837f9804097119b7d22ff992ecf762dff4b59a21787051f622
+Sender: a7yyce5fa6340a35aa5db0b4b6d31a6fbaa6052356460dbb0537657d803f5be2
+Receipeint: x9gh8ab198f6908f702111abc3b5b36f99d00554521886c40e2891b349dc7a1
+Ammount: 5.5
+Timestamp: 1583178169234
+**********END OF BLOCK**********
+ 
+**********START OF BLOCK**********
+Block ID: 2
+Block Hash: 375058ffb6ad97bb616981ee81fefb480e2f8efbc9a15699d0e0a8c076403c82
+Previous Block Hash: d76154c11083645a77311fd8bdd30512805b8634bbe20128337b7b3e2e14fa9a
+Nonce: 1024
+Timestamp: 1583178169238
+Merkle Root: 2b9df97682d92125f10b5e53a665dc93600af956e1b100dcf6d5ed4afc7f2960
+Transactions: 
+Transaction Number: eac61331e1eb06813f9fad896345d1a21d1c8d7ce8f443d4c6e1f50202ccfce5
+Sender: a4a4ce5fa6340a35aa5db0b4b6d31a6fbaa6052356460dbb0537657d803f5be2
+Receipeint: b9058ab198f6908f702111b0c0fb5b36f99d00554521886c40e2891b349dc7a1
+Ammount: 11.2
+Timestamp: 1583178169237
+Transaction Number: 1d5f64c08d58615973820650c3d4920b910151ae67b6cccd9410fe5aeae4be58
+Sender: c488ce5fa6340a35aa5db0b4b6d31a6fbaa6052356460dbb0537657d803f5be2
+Receipeint: d9058ab198f69090102111abc3b5b36f99d00554521886c40e2891b349dc7a1
+Ammount: 0.6
+Timestamp: 1583178169238
+Transaction Number: 331a81bf9d96e06b18f721d5cf6a1132eac7cff835a44bd6d6fc33dad95fcae7
+Sender: e488ce5fa6340a35aa5db0b4b6d31a6fbaa6052356460dbb0537657d803f5be2
+Receipeint: k9058ab198f6908f702111abc3b5b36f99d00554521886c40e2891b349dc7a1
+Ammount: 22.0
+Timestamp: 1583178169238
+Transaction Number: ed188abad7d22e38442878d613c17f1f344ab616a8e1544806b51ef27eba9b88
+Sender: z7yyce5fa6340a35aa5db0b4b6d31a6fbaa6052356460dbb0537657d803f5be2
+Receipeint: asgh8ab198f6908f702111abc3b5b36f99d00554521886c40e2891b349dc7a1
+Ammount: 7.0
+Timestamp: 1583178169238
+**********END OF BLOCK**********
+ 

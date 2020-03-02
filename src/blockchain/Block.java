@@ -1,5 +1,6 @@
 package blockchain;
 
+import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
@@ -101,18 +102,23 @@ public class Block {
 	public void setMerkle_root(String merkle_root) {
 		this.merkle_root = merkle_root;
 	}
-	public void displayWrite(FileWriter myWriter) throws Exception{
-		myWriter.write("Block ID: "+getId()+"\n");
-		myWriter.write("Block Hash: "+getHash()+"\n");
-		myWriter.write("Previous Block Hash: "+getPrevious_hash()+"\n");
-		myWriter.write("Nonce: "+getNonce()+"\n");
-		myWriter.write("Timestamp: "+getTimestamp()+"\n");
-		myWriter.write("Merkle Root: "+getMerkle_root()+"\n");
-		myWriter.write("Transactions: "+"\n");
+	public void displayWrite() throws Exception{
+	    BufferedWriter myWriter = new BufferedWriter(new FileWriter("blockchain.txt",true));
+	    myWriter.append("**********START OF BLOCK**********\n");
+		myWriter.append("Block ID: "+getId()+"\n");
+		myWriter.append("Block Hash: "+getHash()+"\n");
+		myWriter.append("Previous Block Hash: "+getPrevious_hash()+"\n");
+		myWriter.append("Nonce: "+getNonce()+"\n");
+		myWriter.append("Timestamp: "+getTimestamp()+"\n");
+		myWriter.append("Merkle Root: "+getMerkle_root()+"\n");
+		myWriter.append("Transactions: "+"\n");
+		myWriter.close();
 		for(int i=0; i<transaction.size();i++){
-			transaction.get(i).displayWrite(myWriter);
-			myWriter.write("--------------------------------------------------------------------------\n");
+			transaction.get(i).displayWrite();
 		}
+		BufferedWriter myWriter2 = new BufferedWriter(new FileWriter("blockchain.txt",true));
+		myWriter2.append("**********END OF BLOCK**********\n \n");
+		myWriter2.close();
 	}
 	public void display(){
 		System.out.println("Block ID: "+getId());

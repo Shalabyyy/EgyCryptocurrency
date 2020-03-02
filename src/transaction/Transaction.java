@@ -1,5 +1,6 @@
 package transaction;
 
+import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.util.Date;
 
@@ -71,12 +72,14 @@ public class Transaction {
 		this.timestamp = timestamp;
 	}
 	
-	public void displayWrite(FileWriter myWriter) throws Exception{
-		myWriter.write("Transaction Number: "+getHash()+"\n");
-		myWriter.write("Sender: "+getSender()+"\n");
-		myWriter.write("Receipeint: "+getRecepient()+"\n");
-		myWriter.write("Ammount: "+getAmount()+"\n");
-		myWriter.write("Timestamp: " + getTimestamp()+"\n");
+	public void displayWrite() throws Exception{
+	    BufferedWriter myWriter = new BufferedWriter(new FileWriter("blockchain.txt",true));
+		myWriter.append("Transaction Number: "+getHash()+"\n");
+		myWriter.append("Sender: "+getSender()+"\n");
+		myWriter.append("Receipeint: "+getRecepient()+"\n");
+		myWriter.append("Ammount: "+getAmount()+"\n");
+		myWriter.append("Timestamp: " + getTimestamp()+"\n");
+		myWriter.close();
 	}
 	public void display(){
 		System.out.println("Transaction Number: "+getHash());

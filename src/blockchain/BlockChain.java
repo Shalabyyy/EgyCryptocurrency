@@ -1,7 +1,9 @@
 package blockchain;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.*;
 
 import transaction.Transaction;
@@ -18,6 +20,11 @@ public class BlockChain {
 		genisis = new Block();
 		chain.add(genisis);
 		current_block++;
+		try {
+			writeBlockchainFile(genisis);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void addBlock(Block block){
@@ -26,27 +33,26 @@ public class BlockChain {
 		block.setPrevious_hash(prev);
 		this.chain.add(block);
 		current_block++;
+		
+		try {
+			writeBlockchainFile(block);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
-	public void displayWrite(FileWriter myWriter) throws Exception{
-		for(int i=0; i< chain.size();i++){
-			myWriter.write("Block Number "+i+"\n");
-			chain.get(i).displayWrite(myWriter);
-		}
+	public void writeBlockchainFile(Block block) throws Exception{
+	    BufferedWriter writer = new BufferedWriter(new FileWriter("blockchain.txt",true));
+	    block.displayWrite();
+		writer.close();
+		System.out.printf("Added Block %s Log. \n",block.getHash());
+
 	}
 	public void display(){
 		for(int i=0; i< chain.size();i++){
 			System.out.println("Block Number "+i);
 			chain.get(i).display();
 		}
-	}
-	public void writeBlockchainFile() throws Exception{
-		FileWriter myWriter = new FileWriter("blockchain.txt");
-		myWriter.write("Files in Java might be tricky, but it is fun enough!");
-		displayWrite(myWriter);
-		myWriter.close();
-		System.out.println("Successfully wrote to the file.");
-
 	}
 	public static void main(String[] args){
 		Transaction t1 = new Transaction(
@@ -101,18 +107,13 @@ public class BlockChain {
 		transactions1.add(t6);
 		transactions1.add(t7);
 		transactions1.add(t8);
-		Block block1 = new Block(1, "prev hash", 1024,transactions1);
+		Block block1 = new Block(2, "prev hash", 1024,transactions1);
 
 		BlockChain chain = new BlockChain();
 		chain.addBlock(block);
 		chain.addBlock(block1);
 		chain.display();
 		System.out.println("");
-		try {
-			chain.writeBlockchainFile();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 	}
 }
