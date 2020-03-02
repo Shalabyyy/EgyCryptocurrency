@@ -9,7 +9,15 @@ public class Transaction {
 	private double amount;
 	private long timestamp;
 	private String hash;
-
+	
+	public Transaction(String hash){
+		setHash(hash);
+		setSender("Combination");
+		setRecepient("Combination");
+		setAmount(0);
+		Date d = new Date();
+		setTimestamp(d.getTime());
+	}
 	public Transaction(String sender, String recepient, double amount){	
 		//Add Type Validations later on
 		this.setSender(sender);
@@ -75,7 +83,8 @@ public class Transaction {
 				"e9058ab198f6908f702111b0c0fb5b36f99d00554521886c40e2891b349dc7a1",
 				15.0
 				);
-		test.display();	
+		Transaction test2 = new Transaction("e9058ab198f6908f702111b0c0fb5b36f99d00554521886c40e2891b349dc7a1");
+		test2.display();	
 	}
 
 
