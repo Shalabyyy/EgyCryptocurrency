@@ -14,6 +14,12 @@ public class MerkleTree {
 		this.merkle_root = updtransactions.get(0).getHash();
 		System.out.println("The Merkle Root is "+merkle_root);
 	}
+	public String getMerkle_root() {
+		return merkle_root;
+	}
+	public void setMerkle_root(String merkle_root) {
+		this.merkle_root = merkle_root;
+	}
 	public List<Transaction> formTree(List<Transaction> transactions){
 		//Base Case If the List only has One Transaction
 		if(transactions.size()==1)
@@ -36,6 +42,7 @@ public class MerkleTree {
 		}
 		return formTree(updated_list); 
 	}
+	
 	public static void main (String args[]){
 		List<Transaction> transactions = new ArrayList<Transaction>();
 		Transaction t1 = new Transaction(
@@ -68,4 +75,5 @@ public class MerkleTree {
 
 
 	}
+	
 }	

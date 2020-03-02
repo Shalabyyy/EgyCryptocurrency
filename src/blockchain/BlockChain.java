@@ -1,4 +1,7 @@
 package blockchain;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.*;
 
 import transaction.Transaction;
@@ -9,22 +12,41 @@ public class BlockChain {
 	private Block genisis;
 	private int current_block =0;
 
+	//Creating a Blockchain from scathch with a Genisis Block
 	public BlockChain(){
 		chain= new LinkedList<Block>();
 		genisis = new Block();
-		addBlock(genisis);
+		chain.add(genisis);
 		current_block++;
 	}
+
 	public void addBlock(Block block){
+		//Add Previous Block Address
+		String prev = chain.get(chain.size()-1).getHash();
+		block.setPrevious_hash(prev);
 		this.chain.add(block);
 		current_block++;
 
+	}
+	public void displayWrite(FileWriter myWriter) throws Exception{
+		for(int i=0; i< chain.size();i++){
+			myWriter.write("Block Number "+i+"\n");
+			chain.get(i).displayWrite(myWriter);
+		}
 	}
 	public void display(){
 		for(int i=0; i< chain.size();i++){
 			System.out.println("Block Number "+i);
 			chain.get(i).display();
 		}
+	}
+	public void writeBlockchainFile() throws Exception{
+		FileWriter myWriter = new FileWriter("blockchain.txt");
+		myWriter.write("Files in Java might be tricky, but it is fun enough!");
+		displayWrite(myWriter);
+		myWriter.close();
+		System.out.println("Successfully wrote to the file.");
+
 	}
 	public static void main(String[] args){
 		Transaction t1 = new Transaction(
@@ -52,8 +74,8 @@ public class BlockChain {
 		transactions.add(t2);
 		transactions.add(t3);
 		transactions.add(t4);
-		Block block = new Block(1, "my hash", "prev hash", 1024,transactions);
-		
+		Block block = new Block(1, "prev hash", 1024,transactions);
+
 		Transaction t5 = new Transaction(
 				"a4a4ce5fa6340a35aa5db0b4b6d31a6fbaa6052356460dbb0537657d803f5be2",
 				"b9058ab198f6908f702111b0c0fb5b36f99d00554521886c40e2891b349dc7a1",
@@ -79,12 +101,18 @@ public class BlockChain {
 		transactions1.add(t6);
 		transactions1.add(t7);
 		transactions1.add(t8);
-		Block block1 = new Block(1, "my hash", "prev hash", 1024,transactions1);
-		
+		Block block1 = new Block(1, "prev hash", 1024,transactions1);
+
 		BlockChain chain = new BlockChain();
 		chain.addBlock(block);
 		chain.addBlock(block1);
 		chain.display();
 		System.out.println("");
+		try {
+			chain.writeBlockchainFile();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

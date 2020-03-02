@@ -1,6 +1,8 @@
 package transaction;
 
+import java.io.FileWriter;
 import java.util.Date;
+
 import cryptography.*;
 public class Transaction {
 
@@ -68,7 +70,14 @@ public class Transaction {
 	public void setTimestamp(long timestamp) {
 		this.timestamp = timestamp;
 	}
-
+	
+	public void displayWrite(FileWriter myWriter) throws Exception{
+		myWriter.write("Transaction Number: "+getHash()+"\n");
+		myWriter.write("Sender: "+getSender()+"\n");
+		myWriter.write("Receipeint: "+getRecepient()+"\n");
+		myWriter.write("Ammount: "+getAmount()+"\n");
+		myWriter.write("Timestamp: " + getTimestamp()+"\n");
+	}
 	public void display(){
 		System.out.println("Transaction Number: "+getHash());
 		System.out.println("Sender: "+getSender());
