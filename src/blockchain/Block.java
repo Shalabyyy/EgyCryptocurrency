@@ -11,9 +11,9 @@ import cryptography.*;
 
 
 public class Block {
-	
+
 	public static int diffculty = 5; // From 1 to 420k
-	
+
 	private int id;	
 	private String hash;
 	private String previous_hash;
@@ -21,7 +21,7 @@ public class Block {
 	private long timestamp;
 	private ArrayList<Transaction>  transaction;
 	private String merkle_root;
-	
+
 	//Constructor for genisis block
 	public Block(){
 		try {
@@ -33,31 +33,36 @@ public class Block {
 			this.timestamp = d.getTime();
 			this.setTransaction(new ArrayList<Transaction>());;
 			this.merkle_root= "";
-			
+
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	//Constructor for i+1 Blocks
 	public Block(int id, String previous_hash, int nonce,ArrayList<Transaction> transaction){
+		//TODO Make sure that all transactions were confirmed
+		this.setTransaction(transaction);
+		
+		//TODO Discard block if the transactions were not confirmed
 		this.id=id;
-		this.previous_hash= previous_hash; // to be ammended later
+		this.previous_hash= previous_hash; // to be amended later
 		this.nonce=nonce;
 		Date d = new Date();
 		this.timestamp = d.getTime();
-		this.setTransaction(transaction);
-		
-		this.hash= SHA256.hashValue(""+getNonce()+getTimestamp());
-		
-		
+
+
+
 		MerkleTree merkle = new MerkleTree(transaction);
 		this.merkle_root = merkle.getMerkle_root();
-		
+
+		this.hash= SHA256.hashValue(""+getNonce()+getTimestamp()+getMerkle_root());
+		//this.proofOfWork();
+
 		//this.mineBlock(diffculty);
 		//proof of work goes here
 	}
-	
+
 	//Class Getters and Setters
 	public int getId() {
 		return id;
@@ -102,8 +107,8 @@ public class Block {
 		this.merkle_root = merkle_root;
 	}
 	public void displayWrite() throws Exception{
-	    BufferedWriter myWriter = new BufferedWriter(new FileWriter("blockchain.txt",true));
-	    myWriter.append("**********START OF BLOCK**********\n");
+		BufferedWriter myWriter = new BufferedWriter(new FileWriter("blockchain.txt",true));
+		myWriter.append("**********START OF BLOCK**********\n");
 		myWriter.append("Block ID: "+getId()+"\n");
 		myWriter.append("Block Hash: "+getHash()+"\n");
 		myWriter.append("Previous Block Hash: "+getPrevious_hash()+"\n");
@@ -132,19 +137,45 @@ public class Block {
 			System.out.println("--------------------------------------------------------------------------");
 		}
 	}
-	public void mineBlock(int difficulty) {
-		String target = new String(new char[difficulty]).replace('\0', '0'); //Create a string with difficulty * "0" 
-		while(!hash.substring( 0, difficulty).equals(target)) {
-			nonce ++;
-			this.hash= SHA256.hashValue(""+nonce+timestamp);
-			System.out.println(nonce);
-			//hash = calculateHash();
+	private static String numberToChars(int nonce, char ltr){
+		String message ="";
+		if( nonce<=0)
+			return "Erorr";
+		while(nonce!=0){
+			message=message+ltr;
+			nonce--;
 		}
-		System.out.println("Block Mined!!! : " + hash);
+		return message;
 	}
+	private String proofOfWork() {
+		 
+        int leadingzeros= this.getNonce();
+        String leading = numberToChars(leadingzeros,'0');
+        System.out.println(leading);
+       // String message=""+getNonce()+getTimestamp()+getMerkle_root();
+        String message="Hello World";
+        String newMsg = "";
+        String newHash = "";
+        int nonceCounter = 1;
+        boolean flag = false;
+        while(!flag){
+        	newMsg = message+nonceCounter;
+        	newHash = SHA256.hashValue(newMsg);
+        	flag = newHash.substring(0, leadingzeros).equals(leading);
+        	nonceCounter++;
+        	System.out.println(newMsg+" Has Produced "+newHash);
+        	if(newHash.charAt(0)=='q')
+        		break;
+
+        	
+        }
+        System.out.printf("Succcessfuy Mined ! Hash is %s",newHash);
+        return newHash;
+ 
+    }
 	public static void main(String[] args){
-	
-		
+
+
 		Transaction t1 = new Transaction(
 				"f4a4ce5fa6340a35aa5db0b4b6d31a6fbaa6052356460dbb0537657d803f5be2",
 				"e9058ab198f6908f702111b0c0fb5b36f99d00554521886c40e2891b349dc7a1",
@@ -170,10 +201,10 @@ public class Block {
 		transactions.add(t2);
 		transactions.add(t3);
 		transactions.add(t4);
-		Block block = new Block(1, "prev hash", 2,transactions);
+		Block block = new Block(1, "prev hash", 1,transactions);
 		block.display();
-		
+		block.proofOfWork();
 		System.out.println("");
-		
+
 	}
 }

@@ -13,6 +13,8 @@ public class Transaction {
 	private long timestamp;
 	private String hash;
 	
+	private boolean confirmed= false;
+	
 	public Transaction(String hash){
 		setHash(hash);
 		setSender("Combination");
@@ -31,7 +33,7 @@ public class Transaction {
 		String combination = sender+recepient+amount+timestamp;
 		this.setHash(SHA256.hashValue(combination)); //Later to be Hashed Based On Criteria
 	}
-
+	
 	public String getSender() {
 		return sender;
 	}
@@ -71,7 +73,17 @@ public class Transaction {
 	public void setTimestamp(long timestamp) {
 		this.timestamp = timestamp;
 	}
-	
+	public boolean isConfirmed() {
+		return confirmed;
+	}
+	public void setConfirmed(boolean confirmed) {
+		this.confirmed = confirmed;
+	}
+	public void confirmTransaction(){
+		//TODO Check Accounts and funds if they exits
+		//TODO Make sure that the transaction was not tampered
+		//TODO Forward the transactions to another node
+	}
 	public void displayWrite() throws Exception{
 	    BufferedWriter myWriter = new BufferedWriter(new FileWriter("blockchain.txt",true));
 		myWriter.append("Transaction Number: "+getHash()+"\n");
@@ -99,6 +111,7 @@ public class Transaction {
 		Transaction test2 = new Transaction("e9058ab198f6908f702111b0c0fb5b36f99d00554521886c40e2891b349dc7a1");
 		test2.display();	
 	}
+	
 
 
 }
