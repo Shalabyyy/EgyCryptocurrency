@@ -1,11 +1,10 @@
 package blockchain;
-import java.io.BufferedReader;
+
 import java.io.BufferedWriter;
-import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.PrintWriter;
 import java.util.*;
 
+import cryptography.SHA256;
 import transaction.Transaction;
 
 public class BlockChain {
@@ -19,7 +18,7 @@ public class BlockChain {
 		chain= new LinkedList<Block>();
 		genisis = new Block();
 		chain.add(genisis);
-		current_block++;
+		setCurrent_block(getCurrent_block() + 1);
 		try {
 			writeBlockchainFile(genisis);
 		} catch (Exception e) {
@@ -31,8 +30,14 @@ public class BlockChain {
 		//Add Previous Block Address
 		String prev = chain.get(chain.size()-1).getHash();
 		block.setPrevious_hash(prev);
+		if(!SHA256.validateMerkle(block.getMerkle_root(), block.getTransaction())){
+			System.out.println("The Block is Invalid");
+			return;
+		}
+		
+		//Add To Block if validated properly
 		this.chain.add(block);
-		current_block++;
+		setCurrent_block(getCurrent_block() + 1);
 		
 		try {
 			writeBlockchainFile(block);
@@ -115,5 +120,13 @@ public class BlockChain {
 		chain.display();
 		System.out.println("");
 		
+	}
+
+	public int getCurrent_block() {
+		return current_block;
+	}
+
+	public void setCurrent_block(int current_block) {
+		this.current_block = current_block;
 	}
 }

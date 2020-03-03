@@ -3,7 +3,6 @@ package blockchain;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Timestamp;
 import java.util.*;
 
 import transaction.MerkleTree;

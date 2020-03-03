@@ -20,7 +20,7 @@ public class MerkleTree {
 	public void setMerkle_root(String merkle_root) {
 		this.merkle_root = merkle_root;
 	}
-	public List<Transaction> formTree(List<Transaction> transactions){
+	private List<Transaction> formTree(List<Transaction> transactions){
 		//Base Case If the List only has One Transaction
 		if(transactions.size()==1)
 			return transactions;
@@ -70,6 +70,7 @@ public class MerkleTree {
 		transactions.add(t3);
 		transactions.add(t4);
 
+		@SuppressWarnings("unused")
 		MerkleTree merkletree = new MerkleTree(transactions);
 
 

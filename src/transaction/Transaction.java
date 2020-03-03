@@ -90,6 +90,7 @@ public class Transaction {
 	}
 
 	public static void main(String [] args){
+		@SuppressWarnings("unused")
 		Transaction test = new Transaction(
 				"f4a4ce5fa6340a35aa5db0b4b6d31a6fbaa6052356460dbb0537657d803f5be2",
 				"e9058ab198f6908f702111b0c0fb5b36f99d00554521886c40e2891b349dc7a1",

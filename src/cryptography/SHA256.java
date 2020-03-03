@@ -4,6 +4,10 @@ import java.math.BigInteger;
 import java.nio.charset.StandardCharsets; 
 import java.security.MessageDigest; 
 import java.security.NoSuchAlgorithmException; 
+import java.util.List;
+
+import transaction.MerkleTree;
+import transaction.Transaction;
 
 // Java program to calculate SHA hash value 
 
@@ -35,6 +39,7 @@ public class SHA256 {
 
 		return hexString.toString(); 
 	} 
+	
 	public static String hashValue(String val){
 		try {
 			return toHexString(getSHA(val));
@@ -43,6 +48,7 @@ public class SHA256 {
 			return "Error";
 		}
 	}
+	
 	public static String mergeHash(String hash1, String hash2){
 		String mergedhash = hash1+hash2;
 		try {
@@ -54,6 +60,14 @@ public class SHA256 {
 		
 	}
 
+	public static boolean validateMerkle(String merkleroot, List<Transaction> transactions){
+		MerkleTree merkle = new MerkleTree(transactions);
+		if(merkleroot.equals(merkle.getMerkle_root())){
+			return true;
+		}
+		else return false;
+		
+	}
 	// Driver code 
 	public static void main(String args[]) 
 	{ 
