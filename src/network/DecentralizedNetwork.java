@@ -4,19 +4,20 @@ import java.util.ArrayList;
 
 import transaction.Transaction;
 
+@SuppressWarnings("unused")
 public class DecentralizedNetwork {
 
 	private ArrayList<Node>  nodes;
 	public int number_of_nodes =0;
 	public static double deployedAmmount =100;
 	public static double reserveAmmount = 120000;
+	public static int transactionValidationTries= 5; //to be modified later
 
 	public DecentralizedNetwork(){
-		nodes= new ArrayList<Node>();
+		setNodes(new ArrayList<Node>());
 	}
 	public void  addNode(Node n){
-		@SuppressWarnings("unused")
-		boolean add = nodes.add(n);
+		boolean add = getNodes().add(n);
 
 	}
 	public void getNetworkDetails(){
@@ -36,11 +37,20 @@ public class DecentralizedNetwork {
 	public void forgeBlock(){
 		
 	}
-
+	
+	private void pureDeposit(){
+		
+	}
 	public static void TestNetwork(){
 
 	}
 	public static void main(String [] args){
 
+	}
+	public ArrayList<Node> getNodes() {
+		return nodes;
+	}
+	public void setNodes(ArrayList<Node> nodes) {
+		this.nodes = nodes;
 	}
 }
