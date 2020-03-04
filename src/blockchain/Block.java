@@ -61,7 +61,7 @@ public class Block {
 
 		//this.mineBlock(diffculty);
 		//proof of work goes here
-		this.proofOfWork('1');
+		//this.proofOfWork('1');
 	}
 
 	//Class Getters and Setters
@@ -114,6 +114,9 @@ public class Block {
 	public void setTimesValidated(int timesValidated) {
 		this.timesValidated = timesValidated;
 	}
+	public String getMessage(){
+		return ""+this.getNonce()+this.getTimestamp()+this.getMerkle_root();
+	}
 	public void displayWrite() throws Exception{
 		BufferedWriter myWriter = new BufferedWriter(new FileWriter("blockchain.txt",true));
 		myWriter.append("**********START OF BLOCK**********\n");
@@ -145,20 +148,12 @@ public class Block {
 			System.out.println("--------------------------------------------------------------------------");
 		}
 	}
-	private static String numberToChars(int nonce, char ltr){
-		String message ="";
-		if( nonce<=0)
-			return "Erorr";
-		while(nonce!=0){
-			message=message+ltr;
-			nonce--;
-		}
-		return message;
-	}
+	
+	@SuppressWarnings("unused")
 	private String proofOfWork(char leadingChar) {
 		 
         int leadingzeros= getNonce();
-        String leading = numberToChars(leadingzeros,leadingChar);
+        String leading = CustomMath.numberToChars(leadingzeros,leadingChar);
         System.out.println(leading);
         String message=""+getNonce()+getTimestamp()+getMerkle_root();
         String newMsg = "";

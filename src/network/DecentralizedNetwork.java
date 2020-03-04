@@ -43,12 +43,16 @@ public class DecentralizedNetwork {
 	private void pureDeposit(){
 		
 	}
+	public void AwardMiner(){
+		
+	}
 	public static void TestNetwork(){
 
 	}
 	public static void main(String [] args){
 
 	}
+	
 	public ArrayList<Node> getNodes() {
 		return nodes;
 	}

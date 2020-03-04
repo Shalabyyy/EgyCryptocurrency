@@ -26,6 +26,10 @@ public class Transaction {
 		setTimestamp(d.getTime());
 	}
 	public Transaction(String sender, String recepient, double amount){	
+		if(!(CustomMath.isAddressValid(sender) && CustomMath.isAddressValid(recepient))){
+			System.out.println("Error Can Not Create Transaction");
+			return;
+		}
 		//Add Type Validations later on
 		this.setSender(sender);
 		this.setRecepient(recepient);

@@ -95,6 +95,32 @@ public class Node{
 		return (confirmedTransactions && legitMerkle);
 		
 	}
+	
+	@SuppressWarnings("unused")
+	private String proofOfWork(char leadingChar, Block block) {
+		 
+        int leadingzeros= block.getNonce();
+        String leading = CustomMath.numberToChars(leadingzeros,leadingChar);
+        System.out.println(leading);
+        String message=block.getMessage();
+        String newMsg = "";
+        String newHash = "";
+        int nonceCounter = 1;
+        boolean flag = false;
+        while(!flag){
+        	newMsg = message+nonceCounter;
+        	newHash = SHA256.hashValue(newMsg);
+        	flag = newHash.substring(0, leadingzeros).equals(leading);
+        	nonceCounter++;
+        	//System.out.println(newMsg+" Has Produced "+newHash);	
+        }
+        //TODO Later to be Added in a Log File and Reward the Miner
+        System.out.printf("Succcessfuy Mined ! Hash is %s",newHash);
+        System.out.println("Your Reward Will be Added Shortly");
+        return newHash;
+ 
+    }
+	
 	//TODO Later on This Should be Private, Left as public for testing
 	public Transaction sendFunds(double amount, String address){
 		boolean addressFound = false;
