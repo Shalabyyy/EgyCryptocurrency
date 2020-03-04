@@ -13,7 +13,7 @@ import cryptography.*;
 public class Block {
 
 	public static int diffculty = 5; // From 1 to 420k
-
+	private int timesValidated =0;
 	private int id;	
 	private String hash;
 	private String previous_hash;
@@ -106,6 +106,13 @@ public class Block {
 	}
 	public void setMerkle_root(String merkle_root) {
 		this.merkle_root = merkle_root;
+	}
+	public int getTimesValidated() {
+		return timesValidated;
+	}
+
+	public void setTimesValidated(int timesValidated) {
+		this.timesValidated = timesValidated;
 	}
 	public void displayWrite() throws Exception{
 		BufferedWriter myWriter = new BufferedWriter(new FileWriter("blockchain.txt",true));
@@ -206,4 +213,6 @@ public class Block {
 		System.out.println("");
 
 	}
+
+	
 }

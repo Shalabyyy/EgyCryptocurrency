@@ -9,6 +9,8 @@ public class DecentralizedNetwork {
 
 	private ArrayList<Node>  nodes;
 	public int number_of_nodes =0;
+	
+	public static double rateOfCommision = 0.01;
 	public static double deployedAmmount =100;
 	public static double reserveAmmount = 120000;
 	public static int transactionValidationTries= 5; //to be modified later
