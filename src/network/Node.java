@@ -7,7 +7,6 @@ import cryptography.SHA256;
 import blockchain.Block;
 import transaction.Transaction;
 
-@SuppressWarnings("unused")
 public class Node{
 	//User Settings
 	private String networkID;
@@ -130,15 +129,22 @@ public class Node{
 		String minNode = "";
 		double min=Double.MAX_VALUE ;
 		double computation = 0;
+		Node nearest = null;
 		for(int i=0; i<network.getNodes().size();i++){
 			Node n = network.getNodes().get(i);
 			computation = CustomMath.calculateVector(getxCoor(), getyCoor(), n.getxCoor(), n.getyCoor());
 			if(min>computation){
 				min=computation;
-				minNode=n.getPublic_address();		
+				minNode=n.getPublic_address();	
+				nearest=n;
 			}	
 		}
 		System.out.println(minNode+" Is you nearest Node with a distance of "+Math.round(min));
+		
+		//Set The Nearted Node
+		if(nearest!=null)
+			setNearest_node(nearest);
+		
 		return minNode;
 
 	}
@@ -165,7 +171,23 @@ public class Node{
 		}
 			
 	}
-
+	public void displayCredit(){
+		//Display All Funds Received
+		for(int i=0;i<transactionHistory.size();i++){
+			if(transactionHistory.get(i).getRecepient().equals(getPublic_address())){
+				transactionHistory.get(i).display();
+			}
+		}
+	}
+	public void displayDebit(){
+		//Display All Funds Sent
+				for(int i=0;i<transactionHistory.size();i++){
+					if(transactionHistory.get(i).getSender().equals(getPublic_address())){
+						transactionHistory.get(i).display();
+					}
+				}
+			}
+	
 	
 
 	public String getPublic_address() {

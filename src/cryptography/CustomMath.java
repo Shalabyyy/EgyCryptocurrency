@@ -1,5 +1,4 @@
 package cryptography;
-import java.math.*;
 public class CustomMath {
 
 	public static double calculateVector(double x1,double y1, double x2, double y2){
