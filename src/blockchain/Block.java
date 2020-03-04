@@ -61,6 +61,7 @@ public class Block {
 
 		//this.mineBlock(diffculty);
 		//proof of work goes here
+		this.proofOfWork('1');
 	}
 
 	//Class Getters and Setters
@@ -147,13 +148,12 @@ public class Block {
 		}
 		return message;
 	}
-	private String proofOfWork() {
+	private String proofOfWork(char leadingChar) {
 		 
-        int leadingzeros= this.getNonce();
-        String leading = numberToChars(leadingzeros,'0');
+        int leadingzeros= getNonce();
+        String leading = numberToChars(leadingzeros,leadingChar);
         System.out.println(leading);
-       // String message=""+getNonce()+getTimestamp()+getMerkle_root();
-        String message="Hello World";
+        String message=""+getNonce()+getTimestamp()+getMerkle_root();
         String newMsg = "";
         String newHash = "";
         int nonceCounter = 1;
@@ -164,8 +164,7 @@ public class Block {
         	flag = newHash.substring(0, leadingzeros).equals(leading);
         	nonceCounter++;
         	System.out.println(newMsg+" Has Produced "+newHash);
-        	if(newHash.charAt(0)=='q')
-        		break;
+        	
 
         	
         }
@@ -203,7 +202,7 @@ public class Block {
 		transactions.add(t4);
 		Block block = new Block(1, "prev hash", 1,transactions);
 		block.display();
-		block.proofOfWork();
+		//block.proofOfWork();
 		System.out.println("");
 
 	}
