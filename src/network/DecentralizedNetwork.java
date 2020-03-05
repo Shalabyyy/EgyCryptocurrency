@@ -14,7 +14,8 @@ public class DecentralizedNetwork {
 	public static double rateOfCommision = 0.01;
 	public static double deployedAmmount =100;
 	public static double reserveAmmount = 120000;
-	public static int transactionValidationTries= 5; //to be modified later
+	public static int transactionValidationTries = 2; //to be modified later
+	
 
 	public DecentralizedNetwork(){
 		setNodes(new ArrayList<Node>());
@@ -99,18 +100,23 @@ public class DecentralizedNetwork {
 			gossipHelper(nearest.locateNearestNode(),message,sentMessage);
 		}
 	}
+
+	//TODO
 	public void forgeBlock(){
 		
 	}
-
+	//TODO
 	private void pureDeposit(){
 
 	}
+	//TODO
 	public void AwardMiner(){
 
 	}
 	public static void TestNetwork(){
 		System.out.println("Simulation Activated");
+		System.out.println();
+		
 		DecentralizedNetwork network = new DecentralizedNetwork();
 		
 		Node node1 = new Node(0,0,"",network);
@@ -126,8 +132,52 @@ public class DecentralizedNetwork {
 		network.addNode(node3);
 		network.addNode(node4);
 		
+		System.out.println();
+		//Adding a Duplicate Node Test
 		network.addNode(node1);
+		System.out.println();
+		//Add Funds to Simulate Transcations
+		System.out.println("Simulating Transactions \n"); 
+		node1.setBalance(10);
+		node2.setBalance(3);
+		node3.setBalance(3);
+		node4.setBalance(7);
 		
+		//Simulate Transactions
+		Transaction t13 = node1.sendFunds(4, node3.getPublic_address());	//Should be okay
+		Transaction t24 = node2.sendFunds(2.5, node4.getPublic_address()); //Should be okay
+		Transaction t43 = node4.sendFunds(2, node3.getPublic_address());	//should be okay
+		Transaction t12 = node1.sendFunds(10, node2.getPublic_address());	//should be rejected later on
+		
+		Transaction t14 = node1.sendFunds(120, node4.getPublic_address()); //Should be Rejected
+		
+		System.out.println("Simulating Transaction Validation \n");
+		//TODO This part will be hard coded now, will be changed later
+		
+		//At the time I was writng this code, the Validation Limit was 2
+		//TODO set ValidationLimit Based on (n-2)/k 
+		//TODO do not allow a node to validate the same transaction twice
+		
+		node1.validateTransaction(t24); //Should get Validated fine 1/2
+		node1.validateTransaction(t43); //Should get Validated fine 1/2
+		node1.validateTransaction(t13); //Should NOT get Validated 0/2
+		node3.validateTransaction(t12); //Should get Validated fine 1/2
+		node3.validateTransaction(t24); //Should be Validated 2/2 and Balance Should be Updated
+		
+		//TODO so far the System is not Realtime
+		System.out.println("\nChecking that Balances Were Updated After t24");
+		System.out.println("Previous Balance was: " +3.0+" The Balance Now is: "+node2.getBalance());
+		System.out.println("Previous Balance was: " +7.0+" The Balance Now is: "+node4.getBalance()+"\n");	
+		
+		System.out.println("Checking for Double Spending Betweeen t13 and t12 \n");
+		node2.validateTransaction(t13); //Should get Validated fine 1/2
+		node4.validateTransaction(t13); //Should get Validated fine 2/2
+		node4.validateTransaction(t12); //Should NOT get Validated fine, FAIL
+		
+		System.out.println("Validate Remaining Transactions \n");
+		node2.validateTransaction(t43); //Should be Validated fine 2/2 
+		
+	
 	}
 	public static void main(String [] args){
 		TestNetwork();

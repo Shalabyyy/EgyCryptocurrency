@@ -21,8 +21,8 @@ public class Node{
 	private double xCoor;
 	private double yCoor;
 	private String role;
-	
-	
+
+
 	public Node(double xCoor, double yCoor, String role,DecentralizedNetwork network ){
 		//super();
 		this.setNetworkID("To Be Ammended Later");
@@ -34,9 +34,18 @@ public class Node{
 		this.setyCoor(yCoor);
 		this.setRole(role);
 		this.network= network;
+
+		System.out.println("Node "+getPublic_address()+" was Created");
 		//TODO get the nearest Node from super class or Network
 	}
 	public boolean validateTransaction(Transaction toBeValidated){
+		//Check that the node does not validate itself
+		if(toBeValidated.getSender().equals(getPublic_address()) || 
+				toBeValidated.getRecepient().equals(getPublic_address())){
+			System.out.println(getPublic_address().substring(0,6)+" Can't Validate it's own Transaction");
+			return false;
+		}
+
 		ArrayList<Node> other_nodes = network.getNodes();
 		boolean foundSender = false;
 		boolean suffcientAmmount = false;
@@ -54,24 +63,38 @@ public class Node{
 				//The Recipient has been found Has been Found
 				foundRecipient=true;
 			}
-			
+
 			//No need to keep iterating if all is found
 			if(foundSender && foundRecipient)
 				break;
 		}
-		
+
 		//If all of the conditions are met, The Transaction is Validated
 		if(foundSender && foundRecipient && suffcientAmmount){
-			System.out.println("Successfuly Verfied by Node "+getPublic_address());
+			System.out.println("Node "+getPublic_address().substring(0,6) +" Validated Transaction "
+					+toBeValidated.getHash().substring(0, 6));
 			toBeValidated.setTimesValidated(toBeValidated.getTimesValidated()+1);
+			//If the Transaction is confirmed Update Accounts
+			if(toBeValidated.isConfirmed()){
+				System.out.println(toBeValidated.getHash().substring(0, 6)+" Finished Validation 100%");
+				network.updateBalances(toBeValidated);
+			}
 			return true;
 		}
 		else {
 			//TODO Decrement the number of Validations Failures
-			System.out.println("Verfication Failed by Node "+getPublic_address());
+			if(!suffcientAmmount)
+				System.out.println("Transaction "+toBeValidated.getHash().substring(0, 6)+
+						" Verfication Failed by Node "+getPublic_address().substring(0,6)+" Due to Insuffcient Funds");
+			if(!foundRecipient)
+				System.out.println("Transaction "+toBeValidated.getHash().substring(0, 6)+
+						" Verfication Failed by Node "+getPublic_address().substring(0,6) +" Invalid Recpient address");
+			if(!foundSender)
+				System.out.println("Transaction "+toBeValidated.getHash().substring(0, 6)+
+						" Verfication Failed by Node "+getPublic_address().substring(0,6)+" Invalid Sender address");
 			return false;
 		}
-		
+
 	}
 	public boolean validateBlock(Block toBeValidated){
 		//Make Sure no Tampers Were Made 
@@ -82,7 +105,7 @@ public class Node{
 			System.out.println("Merkle Root Mismatch by Node "+getPublic_address());
 			return false;
 		}
-			
+
 		//Make sure that all transactions are verified
 		for(int i=0; i<transactions.size();i++){
 			if(!transactions.get(i).isConfirmed()){
@@ -90,42 +113,42 @@ public class Node{
 				return false;
 			}
 		}
-		
+
 		confirmedTransactions=true;
 		toBeValidated.setTimesValidated(toBeValidated.getTimesValidated()+1);
 		return (confirmedTransactions && legitMerkle);
-		
+
 	}
-	
+
 	@SuppressWarnings("unused")
 	private String proofOfWork(char leadingChar, Block block) {
-		 
-        int leadingzeros= block.getNonce();
-        String leading = CustomMath.numberToChars(leadingzeros,leadingChar);
-        System.out.println(leading);
-        String message=block.getMessage();
-        String newMsg = "";
-        String newHash = "";
-        int nonceCounter = 1;
-        boolean flag = false;
-        while(!flag){
-        	newMsg = message+nonceCounter;
-        	newHash = SHA256.hashValue(newMsg);
-        	flag = newHash.substring(0, leadingzeros).equals(leading);
-        	nonceCounter++;
-        	//System.out.println(newMsg+" Has Produced "+newHash);	
-        }
-        //TODO Later to be Added in a Log File and Reward the Miner
-        System.out.printf("Succcessfuy Mined ! Hash is %s",newHash);
-        System.out.println("Your Reward Will be Added Shortly");
-        return newHash;
- 
-    }
-	
+
+		int leadingzeros= block.getNonce();
+		String leading = CustomMath.numberToChars(leadingzeros,leadingChar);
+		System.out.println(leading);
+		String message=block.getMessage();
+		String newMsg = "";
+		String newHash = "";
+		int nonceCounter = 1;
+		boolean flag = false;
+		while(!flag){
+			newMsg = message+nonceCounter;
+			newHash = SHA256.hashValue(newMsg);
+			flag = newHash.substring(0, leadingzeros).equals(leading);
+			nonceCounter++;
+			//System.out.println(newMsg+" Has Produced "+newHash);	
+		}
+		//TODO Later to be Added in a Log File and Reward the Miner
+		System.out.printf("Succcessfuy Mined ! Hash is %s",newHash);
+		System.out.println("Your Reward Will be Added Shortly");
+		return newHash;
+
+	}
+
 	//TODO Later on This Should be Private, Left as public for testing
 	public Transaction sendFunds(double amount, String address){
 		boolean addressFound = false;
-		
+
 		//Check Funds if they are enough
 		if(amount>getBalance()){
 			System.out.println("Insuffecient funds");
@@ -139,12 +162,16 @@ public class Node{
 			}
 		}
 		if(addressFound)
+		{
+			System.out.println(getPublic_address().substring(0,6)+" ->("+amount+") -> "+
+					address.substring(0,6)+" Is being Proccessed");
 			return new Transaction(getPublic_address(), address, amount);
+		}
 		else{
 			System.out.println("Invalid Recepient Address");
 			return null;
 		}
-		
+
 	}
 	public Node locateNearestNode(){
 		//Check if it is only me
@@ -167,11 +194,11 @@ public class Node{
 			}	
 		}
 		System.out.println(minNode+" Is you nearest Node with a distance of "+Math.round(min));
-		
+
 		//Set The Nearted Node
 		if(nearest!=null)
 			setNearest_node(nearest);
-		
+
 		return nearest;
 
 	}
@@ -184,9 +211,17 @@ public class Node{
 		//Now we have to see if the user sent or received funds
 		if(transaction.getSender().equals(getPublic_address())){
 			//If The User is The Sender he is Debited (Negation)
+
+			//However we need to terminate double spending
+			if(balance<transaction.getAmount()){
+				String id = transaction.getHash().substring(0, 6);
+				System.out.println("Risk of Double Spending Transaction "+id+ "Will be Terminated");
+				transaction.terminate();
+				return;
+			}
 			balance = balance - transaction.getAmount();
 			transactionHistory.add(transaction);
-			
+
 		}
 		else if(transaction.getRecepient().equals(getPublic_address())){
 			//If The User is The Sender he is Credited
@@ -196,7 +231,7 @@ public class Node{
 		else{
 			System.out.println("Proccess Terminated");
 		}
-			
+
 	}
 	public void displayCredit(){
 		//Display All Funds Received
@@ -208,14 +243,14 @@ public class Node{
 	}
 	public void displayDebit(){
 		//Display All Funds Sent
-				for(int i=0;i<transactionHistory.size();i++){
-					if(transactionHistory.get(i).getSender().equals(getPublic_address())){
-						transactionHistory.get(i).display();
-					}
-				}
+		for(int i=0;i<transactionHistory.size();i++){
+			if(transactionHistory.get(i).getSender().equals(getPublic_address())){
+				transactionHistory.get(i).display();
 			}
-	
-	
+		}
+	}
+
+
 
 	public String getPublic_address() {
 		return public_address;

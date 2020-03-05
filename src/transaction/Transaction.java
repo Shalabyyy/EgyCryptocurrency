@@ -4,11 +4,15 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.util.Date;
 
+import network.DecentralizedNetwork;
 import cryptography.*;
 public class Transaction {
 
 	private int timesValidated =0;
-
+	
+	//Asumtion Made here to check the number of validations needed
+	private int validationsNeeded =DecentralizedNetwork.transactionValidationTries;
+	
 	private String sender;
 	private String recepient;
 	private double amount;
@@ -40,7 +44,11 @@ public class Transaction {
 		this.setHash(SHA256.hashValue(combination)); //Later to be Hashed Based On Criteria
 	}
 
-
+	public void terminate(){
+		setTimesValidated(-Integer.MAX_VALUE);
+		setAmount(0);
+		setConfirmed(false);
+	}
 	public void confirmTransaction(){
 		//TODO Check Accounts and funds if they exits
 		//TODO Make sure that the transaction was not tampered
@@ -115,7 +123,7 @@ public class Transaction {
 	public boolean isConfirmed() {
 		return confirmed;
 	}
-	public void setConfirmed(boolean confirmed) {
+	private void setConfirmed(boolean confirmed) {
 		this.confirmed = confirmed;
 	}
 	public int getTimesValidated() {
@@ -123,6 +131,15 @@ public class Transaction {
 	}
 	public void setTimesValidated(int timesValidated) {
 		this.timesValidated = timesValidated;
+		if(timesValidated==getValidationsNeeded()){
+			setConfirmed(true);
+		}
+	}
+	public int getValidationsNeeded() {
+		return validationsNeeded;
+	}
+	public void setValidationsNeeded(int validationsNeeded) {
+		this.validationsNeeded = validationsNeeded;
 	}
 
 
