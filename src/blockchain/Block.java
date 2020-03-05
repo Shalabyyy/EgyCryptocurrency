@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
+import network.DecentralizedNetwork;
 import transaction.MerkleTree;
 import transaction.Transaction;
 import cryptography.*;
@@ -14,6 +15,8 @@ public class Block {
 
 	public static int diffculty = 5; // From 1 to 420k
 	private int timesValidated =0;
+	private int blockValidationsNeeded = DecentralizedNetwork.blockValidationsNeeded;
+	private boolean confirmed = false;
 	private int id;	
 	private String hash;
 	private String previous_hash;
@@ -113,6 +116,9 @@ public class Block {
 
 	public void setTimesValidated(int timesValidated) {
 		this.timesValidated = timesValidated;
+		if(timesValidated>=getBlockValidationsNeeded()){
+			setConfirmed(true);
+		}
 	}
 	public String getMessage(){
 		return ""+this.getNonce()+this.getTimestamp()+this.getMerkle_root();
@@ -207,6 +213,22 @@ public class Block {
 		//block.proofOfWork();
 		System.out.println("");
 
+	}
+
+	public int getBlockValidationsNeeded() {
+		return blockValidationsNeeded;
+	}
+
+	public void setBlockValidationsNeeded(int blockValidationsNeeded) {
+		this.blockValidationsNeeded = blockValidationsNeeded;
+	}
+
+	public boolean isConfirmed() {
+		return confirmed;
+	}
+
+	public void setConfirmed(boolean confirmed) {
+		this.confirmed = confirmed;
 	}
 
 	

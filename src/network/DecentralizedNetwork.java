@@ -2,6 +2,8 @@ package network;
 
 import java.util.ArrayList;
 
+import blockchain.Block;
+import blockchain.BlockChain;
 import cryptography.CustomMath;
 import transaction.Transaction;
 
@@ -15,7 +17,7 @@ public class DecentralizedNetwork {
 	public static double deployedAmmount =100;
 	public static double reserveAmmount = 120000;
 	public static int transactionValidationTries = 2; //to be modified later
-	
+	public static int blockValidationsNeeded = 3;
 
 	public DecentralizedNetwork(){
 		setNodes(new ArrayList<Node>());
@@ -101,9 +103,8 @@ public class DecentralizedNetwork {
 		}
 	}
 
-	//TODO
+	//TODO Use a Transaction Buffer 
 	public void forgeBlock(){
-		
 	}
 	//TODO
 	private void pureDeposit(){
@@ -114,10 +115,15 @@ public class DecentralizedNetwork {
 
 	}
 	public static void TestNetwork(){
+		long startTime = System.currentTimeMillis();
+		
 		System.out.println("Simulation Activated");
 		System.out.println();
 		
 		DecentralizedNetwork network = new DecentralizedNetwork();
+		
+		//Create a BlockChain for the Network
+		BlockChain blockchain = new BlockChain(network);
 		
 		Node node1 = new Node(0,0,"",network);
 		Node node2 = new Node(2,3,"",network);
@@ -140,7 +146,7 @@ public class DecentralizedNetwork {
 		System.out.println("Simulating Transactions \n"); 
 		node1.setBalance(10);
 		node2.setBalance(3);
-		node3.setBalance(3);
+		node3.setBalance(0);
 		node4.setBalance(7);
 		
 		//Simulate Transactions
@@ -177,7 +183,50 @@ public class DecentralizedNetwork {
 		System.out.println("Validate Remaining Transactions \n");
 		node2.validateTransaction(t43); //Should be Validated fine 2/2 
 		
-	
+		//View Balances
+		System.out.println("\nChecking that Balances Were Updated After t24");
+		System.out.println("Intial Node1 Balance was: " +10.0+" The Balance Now is: "+node1.getBalance());
+		System.out.println("Intial Node2 Balance was: " +3.0+" The Balance Now is: "+node2.getBalance());
+		System.out.println("Intial Node3 Balance was: " +0.0+" The Balance Now is: "+node3.getBalance());
+		System.out.println("Intial Node4 Balance was: " +7.0+" The Balance Now is: "+node4.getBalance()+"\n");
+		
+		System.out.println("Total Intial: 20.0");
+		double testTotal = node1.getBalance()+node3.getBalance()+node2.getBalance()+node4.getBalance();
+		System.out.println("Total After Transactions= "+testTotal);
+		
+		//TODO Create a Method that automatically form a block from a Transaction Buffer
+		//TODO For now we will hard Code block making 3/5/2020
+		System.out.println("\nSimulating Block Creation Proccess");
+		//TODO This ArrayList will represent a subset of the buffer
+		ArrayList<Transaction> transactionBuffer = new ArrayList<Transaction>();
+		//We will add THREE instead of FOUR to expose more errors
+		transactionBuffer.add(t24);
+		transactionBuffer.add(t13);
+		transactionBuffer.add(t43);
+		int nonce =1;
+		
+		//TODO Assign Block Forging to Miner Nodes
+		Block firstBlock = new Block(1, "", nonce, transactionBuffer);
+		//TODO Proof of work is Disabled in this Simulation
+		//TODO change *blockValidationsNeeded* to support scalabilty
+		//TODO Assume There is no Version Control, Will be Changed Later
+		//TODO TXT File should be changed Later on
+		
+		//TODO Do not allow Double Validation, Same as Transactions
+		node1.validateBlock(firstBlock);
+		node2.validateBlock(firstBlock);
+		node3.validateBlock(firstBlock);
+		
+		System.out.println("\nAdding Created Blocks to the BlockChain \n");
+		blockchain.addBlock(firstBlock);
+		System.out.println("********************BLOCKCHAIN STATE****************************\n");
+		blockchain.display();
+		System.out.println("\n********************BLOCKCHAIN ENDS HERE****************************\n");
+		
+		//Measuring Performance
+		long elapsed = ((System.currentTimeMillis()-startTime));
+		System.out.println("Total Execution Time :"+elapsed+" ms");
+		System.out.println("SIMULATION ENDED");
 	}
 	public static void main(String [] args){
 		TestNetwork();

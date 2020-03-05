@@ -4,17 +4,32 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.util.*;
 
+import network.DecentralizedNetwork;
 import cryptography.SHA256;
 import transaction.Transaction;
 
 public class BlockChain {
-
+	
+	private DecentralizedNetwork network;
 	public LinkedList<Block> chain;
 	private Block genisis;
 	private int current_block =0;
 
 	//Creating a Blockchain from scathch with a Genisis Block
-	public BlockChain(){
+	public BlockChain(DecentralizedNetwork network){
+		chain= new LinkedList<Block>();
+		genisis = new Block();
+		chain.add(genisis);
+		this.setNetwork(network);
+		setCurrent_block(getCurrent_block() + 1);
+		try {
+			writeBlockchainFile(genisis);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	//Testing Constructor
+	private BlockChain(){
 		chain= new LinkedList<Block>();
 		genisis = new Block();
 		chain.add(genisis);
@@ -27,23 +42,23 @@ public class BlockChain {
 	}
 
 	public void addBlock(Block block){
-		//Add Previous Block Address
-		String prev = chain.get(chain.size()-1).getHash();
-		block.setPrevious_hash(prev);
-		if(!SHA256.validateMerkle(block.getMerkle_root(), block.getTransaction())){
-			System.out.println("The Block is Invalid");
-			return;
+		if(block.isConfirmed()){
+			String prev = chain.get(chain.size()-1).getHash();
+			block.setPrevious_hash(prev);
+			this.chain.add(block);
+			setCurrent_block(getCurrent_block() + 1);
+			try {
+				writeBlockchainFile(block);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			System.out.println(block.getHash().substring(0, 6)+" Was Added to The BlockChain");
+		}
+		else{
+			System.out.println(block.getHash().substring(0, 6)+" is Invalid");
 		}
 		
-		//Add To Block if validated properly
-		this.chain.add(block);
-		setCurrent_block(getCurrent_block() + 1);
 		
-		try {
-			writeBlockchainFile(block);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
 	}
 	public void writeBlockchainFile(Block block) throws Exception{
@@ -128,5 +143,13 @@ public class BlockChain {
 
 	public void setCurrent_block(int current_block) {
 		this.current_block = current_block;
+	}
+
+	public DecentralizedNetwork getNetwork() {
+		return network;
+	}
+
+	public void setNetwork(DecentralizedNetwork network) {
+		this.network = network;
 	}
 }

@@ -12,7 +12,7 @@ public class MerkleTree {
 		this.transactions = transactions;
 		List<Transaction> updtransactions=formTree(this.transactions);
 		this.merkle_root = updtransactions.get(0).getHash();
-		System.out.println("The Merkle Root is "+merkle_root);
+		//System.out.println("The Merkle Root is "+merkle_root);
 	}
 	public String getMerkle_root() {
 		return merkle_root;
@@ -29,13 +29,11 @@ public class MerkleTree {
 		//Combine the Both elememts together tp form an updated list
 		for(int i=0; i<transactions.size()-1;i+=2){
 			String hash = SHA256.mergeHash(transactions.get(i).getHash(), transactions.get(i+1).getHash());
-			System.out.println(hash);
 			updated_list.add(new Transaction(hash));
 		}
 		
 		//if the length is odd hash the last value with itself
 		if(transactions.size()%2==1){
-			System.out.println("Hash 2:");
 			int ref = transactions.size()-1;
 			String hash2 = SHA256.mergeHash(transactions.get(ref).getHash(), transactions.get(ref).getHash());
 			updated_list.add(new Transaction(hash2));

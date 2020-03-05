@@ -102,20 +102,25 @@ public class Node{
 		boolean confirmedTransactions = false;
 		boolean legitMerkle = SHA256.validateMerkle(toBeValidated.getMerkle_root(),transactions);
 		if(!legitMerkle){
-			System.out.println("Merkle Root Mismatch by Node "+getPublic_address());
+			System.out.println("Merkle Root Mismatch by Node "+getPublic_address().substring(0, 6));
 			return false;
 		}
 
 		//Make sure that all transactions are verified
 		for(int i=0; i<transactions.size();i++){
 			if(!transactions.get(i).isConfirmed()){
-				System.out.println("Not All Transactions were Verified by Node "+getPublic_address());
+				System.out.println("Not All Transactions were Verified by Node "+getPublic_address().substring(0, 6));
 				return false;
 			}
 		}
 
 		confirmedTransactions=true;
 		toBeValidated.setTimesValidated(toBeValidated.getTimesValidated()+1);
+		if(confirmedTransactions && legitMerkle){
+			System.out.println(getPublic_address().substring(0, 6)+" Validated Block "+toBeValidated.getHash().substring(0, 6));
+		}
+		if(toBeValidated.isConfirmed())
+			System.out.println(toBeValidated.getHash().substring(0, 6)+" is 100% Valid");
 		return (confirmedTransactions && legitMerkle);
 
 	}

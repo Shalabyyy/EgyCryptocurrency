@@ -131,7 +131,7 @@ public class Transaction {
 	}
 	public void setTimesValidated(int timesValidated) {
 		this.timesValidated = timesValidated;
-		if(timesValidated==getValidationsNeeded()){
+		if(timesValidated>=getValidationsNeeded()){
 			setConfirmed(true);
 		}
 	}
