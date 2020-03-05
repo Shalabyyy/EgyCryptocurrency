@@ -22,9 +22,7 @@ public class Node{
 	private double yCoor;
 	private String role;
 	
-	public Node(){
-		
-	}
+	
 	public Node(double xCoor, double yCoor, String role,DecentralizedNetwork network ){
 		//super();
 		this.setNetworkID("To Be Ammended Later");

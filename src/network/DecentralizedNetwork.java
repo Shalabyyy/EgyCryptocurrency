@@ -20,6 +20,11 @@ public class DecentralizedNetwork {
 		setNodes(new ArrayList<Node>());
 	}
 	public void  addNode(Node n){
+		//Make Sure That The Node Does not exist
+		if(getNodes().contains(n)){
+			System.out.println("Node Already Exists");
+			return;
+		}
 		boolean add = getNodes().add(n);
 		
 	}
@@ -108,9 +113,24 @@ public class DecentralizedNetwork {
 		System.out.println("Simulation Activated");
 		DecentralizedNetwork network = new DecentralizedNetwork();
 		
+		Node node1 = new Node(0,0,"",network);
+		Node node2 = new Node(2,3,"",network);
+		Node node3 = new Node(3,0,"",network);
+		Node node4 = new Node(3,-4,"",network);
+		
+		//TODO Make Sure That the Node is Safe and Clear to go
+		//Assume all nodes are safe
+		
+		network.addNode(node1);
+		network.addNode(node2);
+		network.addNode(node3);
+		network.addNode(node4);
+		
+		network.addNode(node1);
+		
 	}
 	public static void main(String [] args){
-
+		TestNetwork();
 	}
 
 	public ArrayList<Node> getNodes() {
