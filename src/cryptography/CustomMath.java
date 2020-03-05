@@ -19,6 +19,19 @@ public class CustomMath {
 		}
 		return message;
 	}
+	public static boolean [] generateFalseArray(int size){
+		boolean sentMessage[] = new boolean[size];
+
+		for(int i=0; i<sentMessage.length;i++)
+			sentMessage[i]=false;
+		return sentMessage;
+	}
+	public static boolean isAllTrue(boolean [] array){
+		boolean checker = true;
+		for(int i=0; i<array.length;i++)
+			checker = array[i] && checker;
+		return checker;
+	}
 	public static void main(String [] args){
 		System.out.println(calculateVector(5, 5, 7, 7));
 		System.out.println(isAddressValid("ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb"));	}

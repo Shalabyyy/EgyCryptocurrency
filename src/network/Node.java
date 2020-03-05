@@ -21,7 +21,10 @@ public class Node{
 	private double xCoor;
 	private double yCoor;
 	private String role;
-
+	
+	public Node(){
+		
+	}
 	public Node(double xCoor, double yCoor, String role,DecentralizedNetwork network ){
 		//super();
 		this.setNetworkID("To Be Ammended Later");
@@ -145,11 +148,11 @@ public class Node{
 		}
 		
 	}
-	public String locateNearestNode(){
+	public Node locateNearestNode(){
 		//Check if it is only me
 		if(network.getNodes().size()==1){
 			System.out.println("You are the only Node in the Network");
-			return getPublic_address();
+			return this;
 		}
 		//Check Lowest Possible Distance Between this Node and some other node N
 		String minNode = "";
@@ -171,7 +174,7 @@ public class Node{
 		if(nearest!=null)
 			setNearest_node(nearest);
 		
-		return minNode;
+		return nearest;
 
 	}
 	public void updateLedger(Transaction transaction){
