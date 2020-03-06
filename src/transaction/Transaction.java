@@ -50,11 +50,7 @@ public class Transaction {
 		setRecepient("");
 		setConfirmed(false);
 	}
-	public void confirmTransaction(){
-		//TODO Check Accounts and funds if they exits
-		//TODO Make sure that the transaction was not tampered
-		//TODO Forward the transactions to another node
-	}
+	
 	public void displayWrite() throws Exception{
 		BufferedWriter myWriter = new BufferedWriter(new FileWriter("blockchain.txt",true));
 		myWriter.append("Transaction Number: "+getHash()+"\n");

@@ -1,6 +1,8 @@
 package network;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.stream.IntStream;
 
 import cryptography.CustomMath;
 import cryptography.SHA256;
@@ -24,6 +26,13 @@ public class Node{
 	private ArrayList<Transaction> validated ;
 	private ArrayList<Block> validatedBlock ;
 
+	//Autonomous settings
+	private ArrayList<Transaction> unvalidatedTransactionBuffer;
+	private ArrayList<Transaction> validatedTransactionBuffer;
+
+	private ArrayList<Block> unvalidatedBlockBuffer;
+	private ArrayList<Block> blockVotingBuffer;
+
 	public Node(double xCoor, double yCoor, String role,DecentralizedNetwork network ){
 		this.setNetworkID("To Be Ammended Later");
 		this.setPrivate_address(SHA256.generatePrivateAddress());
@@ -37,7 +46,19 @@ public class Node{
 		this.setValidated(new ArrayList<Transaction>());
 		this.setValidatedBlock(new ArrayList<Block>());
 		System.out.println("Node "+getPublic_address()+" was Created");
-		//TODO get the nearest Node from super class or Network
+		locateNearestNode();
+		//TODO Give a copy of the buffers to the new node
+		if(getNetwork().getNodes().size()==1){}
+		else{}
+		
+		setValidatedTransactionBuffer(new ArrayList<Transaction>());
+		setUnvalidatedTransactionBuffer(new ArrayList<Transaction>());
+		setBlockVotingBuffer(new ArrayList<Block>());
+		setUnvalidatedBlockBuffer(new ArrayList<Block>());
+
+
+
+
 	}
 	public boolean validateTransaction(Transaction toBeValidated){
 		//Check that the node does not validate itself
@@ -190,7 +211,9 @@ public class Node{
 		{
 			System.out.println(getPublic_address().substring(0,6)+" ->("+amount+") -> "+
 					address.substring(0,6)+" Is being Proccessed");
-			return new Transaction(getPublic_address(), address, amount);
+			Transaction transaction = new Transaction(getPublic_address(), address, amount);
+			broadcastTransaction(transaction);
+			return transaction;
 		}
 		else{
 			System.out.println("Invalid Recepient Address");
@@ -211,12 +234,15 @@ public class Node{
 		Node nearest = null;
 		for(int i=0; i<network.getNodes().size();i++){
 			Node n = network.getNodes().get(i);
-			computation = CustomMath.calculateVector(getxCoor(), getyCoor(), n.getxCoor(), n.getyCoor());
-			if(min>computation){
-				min=computation;
-				minNode=n.getPublic_address();	
-				nearest=n;
-			}	
+			if(n!=null){
+				computation = CustomMath.calculateVector(getxCoor(), getyCoor(), n.getxCoor(), n.getyCoor());
+				if(min>computation){
+					min=computation;
+					minNode=n.getPublic_address();	
+					nearest=n;
+				}	
+			}
+
 		}
 		System.out.println(minNode+" Is you nearest Node with a distance of "+Math.round(min));
 
@@ -275,7 +301,59 @@ public class Node{
 		}
 	}
 
+	//Automation Methods
+	public void broadcastTransaction(Transaction transaction){
+		if(getNetwork().getNodes().size()<=2){
+			System.out.println("Can't Broadcast when you are the only node");
+			return;
+		}
+		int me = getNetwork().getNodes().indexOf(this); //get my reference on the network
+		int receiver=-1;
 
+		//getting reference of the recipent
+		for(int i=0; i<network.getNodes().size();i++ ){
+			if(network.getNodes().get(i).getPublic_address().equals(transaction.getRecepient())){
+				receiver = i;
+				break;
+			}
+		}
+
+		int audience = DecentralizedNetwork.transactionValidationTries;
+		int [] exclude = {me,receiver};
+		ArrayList<Integer> used = new ArrayList<Integer>();
+		while(audience!=0){
+			int ref =  CustomMath.randomIntExclude(0, getNetwork().getNodes().size(), exclude);
+			boolean alreadyExists = used.contains(ref);
+			//System.out.println(alreadyExists);
+			if(!alreadyExists){
+				//add value
+				getNetwork().getNodes().get(ref).getUnvalidatedTransactionBuffer().add(transaction);
+				System.out.printf("Node %s chose Node %s to Validate \n",getPublic_address().substring(0, 6),
+						getNetwork().getNodes().get(ref).getPublic_address().substring(0, 6));
+				used.add(ref);
+				audience--;
+		
+			}
+		}
+
+
+
+	}
+	public void broadcastConfirmedTransaction(){
+
+	}
+	public void formBlockFromBuffer(){
+
+	}
+	public void binFaultyBlock(){
+
+	}
+	public void binFaultyTransaction(){
+
+	}
+	public void signalTransactionFlush(){
+
+	}
 
 	public String getPublic_address() {
 		return public_address;
@@ -343,4 +421,38 @@ public class Node{
 	public void setValidatedBlock(ArrayList<Block> validatedBlock) {
 		this.validatedBlock = validatedBlock;
 	}
+
+	public DecentralizedNetwork getNetwork() {
+		return network;
+	}
+	public void setNetwork(DecentralizedNetwork network) {
+		this.network = network;
+	}
+	public ArrayList<Transaction> getUnvalidatedTransactionBuffer() {
+		return unvalidatedTransactionBuffer;
+	}
+	public void setUnvalidatedTransactionBuffer(
+			ArrayList<Transaction> unvalidatedTransactionBuffer) {
+		this.unvalidatedTransactionBuffer = unvalidatedTransactionBuffer;
+	}
+	public ArrayList<Transaction> getValidatedTransactionBuffer() {
+		return validatedTransactionBuffer;
+	}
+	public void setValidatedTransactionBuffer(
+			ArrayList<Transaction> validatedTransactionBuffer) {
+		this.validatedTransactionBuffer = validatedTransactionBuffer;
+	}
+	public ArrayList<Block> getUnvalidatedBlockBuffer() {
+		return unvalidatedBlockBuffer;
+	}
+	public void setUnvalidatedBlockBuffer(ArrayList<Block> unvalidatedBlockBuffer) {
+		this.unvalidatedBlockBuffer = unvalidatedBlockBuffer;
+	}
+	public ArrayList<Block> getBlockVotingBuffer() {
+		return blockVotingBuffer;
+	}
+	public void setBlockVotingBuffer(ArrayList<Block> blockVotingBuffer) {
+		this.blockVotingBuffer = blockVotingBuffer;
+	}
+
 }

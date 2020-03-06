@@ -165,6 +165,7 @@ public class DecentralizedNetwork {
 		//At the time I was writng this code, the Validation Limit was 2
 		//TODO set ValidationLimit Based on (n-2)/k 
 		//TODO do not allow a node to validate the same transaction twice
+		//TODO Forward the transactions to another node
 		
 		node1.validateTransaction(t24); //Should get Validated fine 1/2
 		node1.validateTransaction(t43); //Should get Validated fine 1/2
@@ -215,7 +216,7 @@ public class DecentralizedNetwork {
 		//TODO Assume There is no Version Control, Will be Changed Later
 		//TODO TXT File should be changed Later on
 		
-		//TODO Do not allow Double Validation, Same as Transactions
+		// Do not allow Double Validation, Same as Transactions DONE
 		node1.validateBlock(firstBlock);
 		node2.validateBlock(firstBlock);
 		node2.validateBlock(firstBlock);

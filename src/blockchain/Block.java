@@ -16,11 +16,11 @@ public class Block {
 	public static int diffculty = 5; // From 1 to 420k
 	private int timesValidated =0;
 	private int timesError =0;
-	
+
 	private int blockValidationsNeeded = DecentralizedNetwork.blockValidationsNeeded;
 	private int maxErrorBlock = DecentralizedNetwork.maxErrorBlock;
-	
-	
+
+
 	private boolean confirmed = false;
 	private int id;	
 	private String hash;
@@ -50,7 +50,7 @@ public class Block {
 	//Constructor for i+1 Blocks
 	public Block(int id, String previous_hash, int nonce,ArrayList<Transaction> transaction){
 		this.setTransaction(transaction);
-		
+
 		this.setId(id);
 		this.setPrevious_hash(previous_hash);; // to be amended later
 		this.setNonce(nonce);;
@@ -61,19 +61,19 @@ public class Block {
 		this.setMerkle_root(merkle.getMerkle_root());
 
 		this.setHash(SHA256.hashValue(""+getNonce()+getTimestamp()+getMerkle_root()));
-		
+
 		//proof of work goes here
 		//this.proofOfWork('1');
 	}
 	public void terminate(){
-				this.setTransaction(null);
-				setId(-1);
-				setPrevious_hash("");
-				setNonce(0);
-				setMerkle_root("");
+		this.setTransaction(null);
+		setId(-1);
+		setPrevious_hash("");
+		setNonce(0);
+		setMerkle_root("");
 
 	}
-	
+
 	public void displayWrite() throws Exception{
 		BufferedWriter myWriter = new BufferedWriter(new FileWriter("blockchain.txt",true));
 		myWriter.append("**********START OF BLOCK**********\n");
@@ -105,32 +105,32 @@ public class Block {
 			System.out.println("--------------------------------------------------------------------------");
 		}
 	}
-	
+
 	@SuppressWarnings("unused")
 	private String proofOfWork(char leadingChar) {
-		 
-        int leadingzeros= getNonce();
-        String leading = CustomMath.numberToChars(leadingzeros,leadingChar);
-        System.out.println(leading);
-        String message=""+getNonce()+getTimestamp()+getMerkle_root();
-        String newMsg = "";
-        String newHash = "";
-        int nonceCounter = 1;
-        boolean flag = false;
-        while(!flag){
-        	newMsg = message+nonceCounter;
-        	newHash = SHA256.hashValue(newMsg);
-        	flag = newHash.substring(0, leadingzeros).equals(leading);
-        	nonceCounter++;
-        	System.out.println(newMsg+" Has Produced "+newHash);
-        	
 
-        	
-        }
-        System.out.printf("Succcessfuy Mined ! Hash is %s",newHash);
-        return newHash;
- 
-    }
+		int leadingzeros= getNonce();
+		String leading = CustomMath.numberToChars(leadingzeros,leadingChar);
+		System.out.println(leading);
+		String message=""+getNonce()+getTimestamp()+getMerkle_root();
+		String newMsg = "";
+		String newHash = "";
+		int nonceCounter = 1;
+		boolean flag = false;
+		while(!flag){
+			newMsg = message+nonceCounter;
+			newHash = SHA256.hashValue(newMsg);
+			flag = newHash.substring(0, leadingzeros).equals(leading);
+			nonceCounter++;
+			System.out.println(newMsg+" Has Produced "+newHash);
+
+
+
+		}
+		System.out.printf("Succcessfuy Mined ! Hash is %s",newHash);
+		return newHash;
+
+	}
 	public static void main(String[] args){
 
 
@@ -166,95 +166,95 @@ public class Block {
 
 	}
 	//Class Getters and Setters
-		public int getId() {
-			return id;
-		}
-		public void setId(int id) {
-			this.id = id;
-		}
-		public String getHash() {
-			return hash;
-		}
-		public void setHash(String hash) {
-			this.hash = hash;
-		}
-		public String getPrevious_hash() {
-			return previous_hash;
-		}
-		public void setPrevious_hash(String previous_hash) {
-			this.previous_hash = previous_hash;
-		}
-		public int getNonce() {
-			return nonce;
-		}
-		public void setNonce(int nonce) {
-			this.nonce = nonce;
-		}
-		public long getTimestamp() {
-			return timestamp;
-		}
-		public void setTimestamp(long timestamp) {
-			this.timestamp = timestamp;
-		}
-		public ArrayList<Transaction> getTransaction() {
-			return transaction;
-		}
-		public void setTransaction(ArrayList<Transaction> transaction) {
-			this.transaction = transaction;
-		}
-		public String getMerkle_root() {
-			return merkle_root;
-		}
-		public void setMerkle_root(String merkle_root) {
-			this.merkle_root = merkle_root;
-		}
-		public int getTimesValidated() {
-			return timesValidated;
-		}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getHash() {
+		return hash;
+	}
+	public void setHash(String hash) {
+		this.hash = hash;
+	}
+	public String getPrevious_hash() {
+		return previous_hash;
+	}
+	public void setPrevious_hash(String previous_hash) {
+		this.previous_hash = previous_hash;
+	}
+	public int getNonce() {
+		return nonce;
+	}
+	public void setNonce(int nonce) {
+		this.nonce = nonce;
+	}
+	public long getTimestamp() {
+		return timestamp;
+	}
+	public void setTimestamp(long timestamp) {
+		this.timestamp = timestamp;
+	}
+	public ArrayList<Transaction> getTransaction() {
+		return transaction;
+	}
+	public void setTransaction(ArrayList<Transaction> transaction) {
+		this.transaction = transaction;
+	}
+	public String getMerkle_root() {
+		return merkle_root;
+	}
+	public void setMerkle_root(String merkle_root) {
+		this.merkle_root = merkle_root;
+	}
+	public int getTimesValidated() {
+		return timesValidated;
+	}
 
-		public void setTimesValidated(int timesValidated) {
-			this.timesValidated = timesValidated;
-			if(timesValidated>=getBlockValidationsNeeded()){
-				setConfirmed(true);
-			}
+	public void setTimesValidated(int timesValidated) {
+		this.timesValidated = timesValidated;
+		if(timesValidated>=getBlockValidationsNeeded()){
+			setConfirmed(true);
 		}
-		public String getMessage(){
-			return ""+this.getNonce()+this.getTimestamp()+this.getMerkle_root();
-		}
+	}
+	public String getMessage(){
+		return ""+this.getNonce()+this.getTimestamp()+this.getMerkle_root();
+	}
 
-		public int getBlockValidationsNeeded() {
-			return blockValidationsNeeded;
-		}
+	public int getBlockValidationsNeeded() {
+		return blockValidationsNeeded;
+	}
 
-		public void setBlockValidationsNeeded(int blockValidationsNeeded) {
-			this.blockValidationsNeeded = blockValidationsNeeded;
-		}
+	public void setBlockValidationsNeeded(int blockValidationsNeeded) {
+		this.blockValidationsNeeded = blockValidationsNeeded;
+	}
 
-		public boolean isConfirmed() {
-			return confirmed;
-		}
+	public boolean isConfirmed() {
+		return confirmed;
+	}
 
-		public void setConfirmed(boolean confirmed) {
-			this.confirmed = confirmed;
-		}
+	public void setConfirmed(boolean confirmed) {
+		this.confirmed = confirmed;
+	}
 
-		public int getMaxErrorBlock() {
-			return maxErrorBlock;
-		}
+	public int getMaxErrorBlock() {
+		return maxErrorBlock;
+	}
 
-		public void setMaxErrorBlock(int maxErrorBlock) {
-			this.maxErrorBlock = maxErrorBlock;
-		}
+	public void setMaxErrorBlock(int maxErrorBlock) {
+		this.maxErrorBlock = maxErrorBlock;
+	}
 
-		public int getTimesError() {
-			return timesError;
-		}
+	public int getTimesError() {
+		return timesError;
+	}
 
-		public void setTimesError(int timesError) {
-			this.timesError = timesError;
-			if(timesError==getTimesError()){
-				System.out.printf("Block %s is Fault",getHash().substring(0, 6));
-			}
+	public void setTimesError(int timesError) {
+		this.timesError = timesError;
+		if(timesError==getTimesError()){
+			System.out.printf("Block %s is Fault",getHash().substring(0, 6));
 		}
-	
+	}
+
 }
