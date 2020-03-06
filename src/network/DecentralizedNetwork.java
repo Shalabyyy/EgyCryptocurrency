@@ -18,6 +18,8 @@ public class DecentralizedNetwork {
 	public static double reserveAmmount = 120000;
 	public static int transactionValidationTries = 2; //to be modified later
 	public static int blockValidationsNeeded = 3;
+	public static int maxErrorTransaction =2;
+	public static int maxErrorBlock =2;
 
 	public DecentralizedNetwork(){
 		setNodes(new ArrayList<Node>());

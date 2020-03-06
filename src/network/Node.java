@@ -25,7 +25,6 @@ public class Node{
 	private ArrayList<Block> validatedBlock ;
 
 	public Node(double xCoor, double yCoor, String role,DecentralizedNetwork network ){
-		//super();
 		this.setNetworkID("To Be Ammended Later");
 		this.setPrivate_address(SHA256.generatePrivateAddress());
 		this.setPublic_address(SHA256.hashValue(this.getPrivate_address()));
@@ -47,6 +46,7 @@ public class Node{
 			System.out.println(getPublic_address().substring(0,6)+" Can't Validate it's own Transaction");
 			return false;
 		}
+		//Check that the node did not validate this transaction before
 		if(getValidated().contains(toBeValidated)){
 			System.out.println(getPublic_address().substring(0,6)+" Already Validated This Transaction!");
 			return false;	
@@ -88,7 +88,9 @@ public class Node{
 			return true;
 		}
 		else {
-			//TODO Decrement the number of Validations Failures
+			//Increment the number of Validations Failures
+			toBeValidated.setTimesError(toBeValidated.getTimesError()+1);
+			getValidated().add(toBeValidated);
 			if(!suffcientAmmount)
 				System.out.println("Transaction "+toBeValidated.getHash().substring(0, 6)+
 						" Verfication Failed by Node "+getPublic_address().substring(0,6)+" Due to Insuffcient Funds");
@@ -116,6 +118,7 @@ public class Node{
 		//Make Sure no Tampers Were Made 
 		boolean legitMerkle = SHA256.validateMerkle(toBeValidated.getMerkle_root(),transactions);
 		if(!legitMerkle){
+			validatedBlock.add(toBeValidated);
 			System.out.println("Merkle Root Mismatch by Node "+getPublic_address().substring(0, 6));
 			return false;
 		}
@@ -124,6 +127,7 @@ public class Node{
 		for(int i=0; i<transactions.size();i++){
 			if(!transactions.get(i).isConfirmed()){
 				System.out.println("Not All Transactions were Verified by Node "+getPublic_address().substring(0, 6));
+				validatedBlock.add(toBeValidated);
 				return false;
 			}
 		}

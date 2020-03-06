@@ -9,16 +9,17 @@ import cryptography.*;
 public class Transaction {
 
 	private int timesValidated =0;
+	private int timesError =0;
 	
-	//Asumtion Made here to check the number of validations needed
+	//TODO Asumtion Made here to check the number of validations needed
 	private int validationsNeeded =DecentralizedNetwork.transactionValidationTries;
+	private int maxErrorTransaction = DecentralizedNetwork.maxErrorTransaction;
 	
 	private String sender;
 	private String recepient;
 	private double amount;
 	private long timestamp;
 	private String hash;
-
 	private boolean confirmed= false;
 
 	public Transaction(String hash){
@@ -46,7 +47,7 @@ public class Transaction {
 
 	public void terminate(){
 		setTimesValidated(-Integer.MAX_VALUE);
-		setAmount(0);
+		setRecepient("");
 		setConfirmed(false);
 	}
 	public void confirmTransaction(){
@@ -140,6 +141,21 @@ public class Transaction {
 	}
 	public void setValidationsNeeded(int validationsNeeded) {
 		this.validationsNeeded = validationsNeeded;
+	}
+	public int getMaxErrorTransaction() {
+		return maxErrorTransaction;
+	}
+	public void setMaxErrorTransaction(int maxErrorTransaction) {
+		this.maxErrorTransaction = maxErrorTransaction;
+	}
+	public int getTimesError() {
+		return timesError;
+	}
+	public void setTimesError(int timesError) {
+		this.timesError = timesError;
+		if(timesError==getMaxErrorTransaction()){
+			this.terminate();
+		}
 	}
 
 
