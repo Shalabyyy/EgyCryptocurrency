@@ -168,6 +168,7 @@ public class DecentralizedNetwork {
 		node1.validateTransaction(t43); //Should get Validated fine 1/2
 		node1.validateTransaction(t13); //Should NOT get Validated 0/2
 		node3.validateTransaction(t12); //Should get Validated fine 1/2
+		node3.validateTransaction(t12); //Should NOT get Validted 1/2
 		node3.validateTransaction(t24); //Should be Validated 2/2 and Balance Should be Updated
 		
 		//TODO so far the System is not Realtime
@@ -215,6 +216,7 @@ public class DecentralizedNetwork {
 		//TODO Do not allow Double Validation, Same as Transactions
 		node1.validateBlock(firstBlock);
 		node2.validateBlock(firstBlock);
+		node2.validateBlock(firstBlock);
 		node3.validateBlock(firstBlock);
 		
 		System.out.println("\nAdding Created Blocks to the BlockChain \n");
@@ -227,6 +229,7 @@ public class DecentralizedNetwork {
 		long elapsed = ((System.currentTimeMillis()-startTime));
 		System.out.println("Total Execution Time :"+elapsed+" ms");
 		System.out.println("SIMULATION ENDED");
+		
 	}
 	public static void main(String [] args){
 		TestNetwork();

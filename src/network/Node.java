@@ -21,7 +21,8 @@ public class Node{
 	private double xCoor;
 	private double yCoor;
 	private String role;
-
+	private ArrayList<Transaction> validated ;
+	private ArrayList<Block> validatedBlock ;
 
 	public Node(double xCoor, double yCoor, String role,DecentralizedNetwork network ){
 		//super();
@@ -34,7 +35,8 @@ public class Node{
 		this.setyCoor(yCoor);
 		this.setRole(role);
 		this.network= network;
-
+		this.setValidated(new ArrayList<Transaction>());
+		this.setValidatedBlock(new ArrayList<Block>());
 		System.out.println("Node "+getPublic_address()+" was Created");
 		//TODO get the nearest Node from super class or Network
 	}
@@ -45,7 +47,10 @@ public class Node{
 			System.out.println(getPublic_address().substring(0,6)+" Can't Validate it's own Transaction");
 			return false;
 		}
-
+		if(getValidated().contains(toBeValidated)){
+			System.out.println(getPublic_address().substring(0,6)+" Already Validated This Transaction!");
+			return false;	
+		}
 		ArrayList<Node> other_nodes = network.getNodes();
 		boolean foundSender = false;
 		boolean suffcientAmmount = false;
@@ -74,6 +79,7 @@ public class Node{
 			System.out.println("Node "+getPublic_address().substring(0,6) +" Validated Transaction "
 					+toBeValidated.getHash().substring(0, 6));
 			toBeValidated.setTimesValidated(toBeValidated.getTimesValidated()+1);
+			getValidated().add(toBeValidated);
 			//If the Transaction is confirmed Update Accounts
 			if(toBeValidated.isConfirmed()){
 				System.out.println(toBeValidated.getHash().substring(0, 6)+" Finished Validation 100%");
@@ -97,9 +103,17 @@ public class Node{
 
 	}
 	public boolean validateBlock(Block toBeValidated){
-		//Make Sure no Tampers Were Made 
+		//Make sure that the Block was not Validated by this node before
+		if(getValidatedBlock().contains(toBeValidated)){
+			System.out.printf("Node %s Already Validated Block %s \n",
+					getPublic_address().substring(0,6),toBeValidated.getHash().substring(0, 6));
+			return false;
+		}
+
 		ArrayList<Transaction> transactions = toBeValidated.getTransaction();
 		boolean confirmedTransactions = false;
+
+		//Make Sure no Tampers Were Made 
 		boolean legitMerkle = SHA256.validateMerkle(toBeValidated.getMerkle_root(),transactions);
 		if(!legitMerkle){
 			System.out.println("Merkle Root Mismatch by Node "+getPublic_address().substring(0, 6));
@@ -115,8 +129,10 @@ public class Node{
 		}
 
 		confirmedTransactions=true;
-		toBeValidated.setTimesValidated(toBeValidated.getTimesValidated()+1);
+
 		if(confirmedTransactions && legitMerkle){
+			toBeValidated.setTimesValidated(toBeValidated.getTimesValidated()+1);
+			getValidatedBlock().add(toBeValidated);
 			System.out.println(getPublic_address().substring(0, 6)+" Validated Block "+toBeValidated.getHash().substring(0, 6));
 		}
 		if(toBeValidated.isConfirmed())
@@ -310,5 +326,17 @@ public class Node{
 	}
 	public void setNearest_node(Node nearest_node) {
 		this.nearest_node = nearest_node;
+	}
+	public ArrayList<Transaction> getValidated() {
+		return validated;
+	}
+	public void setValidated(ArrayList<Transaction> validated) {
+		this.validated = validated;
+	}
+	public ArrayList<Block> getValidatedBlock() {
+		return validatedBlock;
+	}
+	public void setValidatedBlock(ArrayList<Block> validatedBlock) {
+		this.validatedBlock = validatedBlock;
 	}
 }
