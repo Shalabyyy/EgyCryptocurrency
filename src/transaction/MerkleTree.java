@@ -21,6 +21,14 @@ public class MerkleTree {
 		this.merkle_root = merkle_root;
 	}
 	private List<Transaction> formTree(List<Transaction> transactions){
+		if(transactions==null){
+			System.out.println("Error Forming Merkle Tree");
+			return null;
+		}
+		if(transactions.size()==0){
+			System.out.println("Cant Form Merkle Tree from Empty List");
+			return null;
+		}
 		//Base Case If the List only has One Transaction
 		if(transactions.size()==1)
 			return transactions;

@@ -29,10 +29,11 @@ public class BlockChain {
 		}
 	}
 	//Testing Constructor
-	private BlockChain(){
+	public BlockChain(){
 		chain= new LinkedList<Block>();
 		genisis = new Block();
 		chain.add(genisis);
+		this.setNetwork(null);
 		setCurrent_block(getCurrent_block() + 1);
 		try {
 			writeBlockchainFile(genisis);
@@ -40,7 +41,6 @@ public class BlockChain {
 			e.printStackTrace();
 		}
 	}
-
 	public void addBlock(Block block){
 		if(block.isConfirmed()){
 			String prev = chain.get(chain.size()-1).getHash();

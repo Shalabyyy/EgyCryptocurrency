@@ -9,6 +9,7 @@ import network.DecentralizedNetwork;
 import transaction.MerkleTree;
 import transaction.Transaction;
 import cryptography.*;
+import network.*;
 
 
 public class Block {
@@ -16,11 +17,12 @@ public class Block {
 	public static int diffculty = 5; // From 1 to 420k
 	private int timesValidated =0;
 	private int timesError =0;
-
+	private int votes = 0;
 	private int blockValidationsNeeded = DecentralizedNetwork.blockValidationsNeeded;
 	private int maxErrorBlock = DecentralizedNetwork.maxErrorBlock;
-
-
+	private ArrayList<Node> voters;
+	private String creator;
+	
 	private boolean confirmed = false;
 	private int id;	
 	private String hash;
@@ -41,14 +43,17 @@ public class Block {
 			this.timestamp = d.getTime();
 			this.setTransaction(new ArrayList<Transaction>());;
 			this.merkle_root= "";
+			this.voters = new ArrayList<Node>();
+			setCreator(creator);
 
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
 	}
 
+
 	//Constructor for i+1 Blocks
-	public Block(int id, String previous_hash, int nonce,ArrayList<Transaction> transaction){
+	public Block(int id, String previous_hash, int nonce,ArrayList<Transaction> transaction,String creator){
 		this.setTransaction(transaction);
 
 		this.setId(id);
@@ -61,7 +66,7 @@ public class Block {
 		this.setMerkle_root(merkle.getMerkle_root());
 
 		this.setHash(SHA256.hashValue(""+getNonce()+getTimestamp()+getMerkle_root()));
-
+		setCreator(creator);
 		//proof of work goes here
 		//this.proofOfWork('1');
 	}
@@ -159,7 +164,7 @@ public class Block {
 		transactions.add(t2);
 		transactions.add(t3);
 		transactions.add(t4);
-		Block block = new Block(1, "prev hash", 1,transactions);
+		Block block = new Block(1, "prev hash", 1,transactions,"");
 		block.display();
 		//block.proofOfWork();
 		System.out.println("");
@@ -255,6 +260,37 @@ public class Block {
 		if(timesError==getTimesError()){
 			System.out.printf("Block %s is Fault",getHash().substring(0, 6));
 		}
+	}
+
+	public int getVotes() {
+		return votes;
+	}
+
+	public void setVotes(int votes) {
+		this.votes = votes;
+	}
+
+	public String getCreator() {
+		return creator;
+	}
+
+	public void setCreator(String creator) {
+		this.creator = creator;
+	}
+	public static int getDiffculty() {
+		return diffculty;
+	}
+
+	public static void setDiffculty(int diffculty) {
+		Block.diffculty = diffculty;
+	}
+
+	public ArrayList<Node> getVoters() {
+		return voters;
+	}
+
+	public void setVoters(ArrayList<Node> voters) {
+		this.voters = voters;
 	}
 
 }

@@ -25,6 +25,7 @@ public class Node{
 	private String role;
 	private ArrayList<Transaction> validated ;
 	private ArrayList<Block> validatedBlock ;
+	private ArrayList<Block> votedBlocks;
 
 	//Autonomous settings
 	private ArrayList<Transaction> unvalidatedTransactionBuffer;
@@ -47,10 +48,11 @@ public class Node{
 		this.setValidatedBlock(new ArrayList<Block>());
 		System.out.println("Node "+getPublic_address()+" was Created");
 		locateNearestNode();
+		setVotedBlocks(new ArrayList<Block>());
 		//TODO Give a copy of the buffers to the new node
 		if(getNetwork().getNodes().size()==1){}
 		else{}
-		
+
 		setValidatedTransactionBuffer(new ArrayList<Transaction>());
 		setUnvalidatedTransactionBuffer(new ArrayList<Transaction>());
 		setBlockVotingBuffer(new ArrayList<Block>());
@@ -60,8 +62,18 @@ public class Node{
 
 
 	}
+	public void ValidateTransactions(){
+		for(int i=0;i<getUnvalidatedTransactionBuffer().size();i++){
+			validateTransaction(getUnvalidatedTransactionBuffer().get(i));
+		}
+		getUnvalidatedTransactionBuffer().clear();
+	}
 	public boolean validateTransaction(Transaction toBeValidated){
 		//Check that the node does not validate itself
+		if(toBeValidated==null){
+			System.out.println("Transaction nullfied");
+			return false;
+		}
 		if(toBeValidated.getSender().equals(getPublic_address()) || 
 				toBeValidated.getRecepient().equals(getPublic_address())){
 			System.out.println(getPublic_address().substring(0,6)+" Can't Validate it's own Transaction");
@@ -104,7 +116,8 @@ public class Node{
 			//If the Transaction is confirmed Update Accounts
 			if(toBeValidated.isConfirmed()){
 				System.out.println(toBeValidated.getHash().substring(0, 6)+" Finished Validation 100%");
-				network.updateBalances(toBeValidated);
+				getNetwork().updateBalances(toBeValidated);
+				broadcastConfirmedTransaction(toBeValidated);
 			}
 			return true;
 		}
@@ -125,21 +138,38 @@ public class Node{
 		}
 
 	}
+	public void ValidateBlocks(){
+		for(int i=0;i<getUnvalidatedBlockBuffer().size();i++){
+			validateBlock(getUnvalidatedBlockBuffer().get(i));
+		}
+		getUnvalidatedBlockBuffer().clear();
+	}
 	public boolean validateBlock(Block toBeValidated){
+		//Make Sure That the block was not already Validated
+
+		if(toBeValidated==null){
+			System.out.println("The Block is Null");
+			return false;
+		}
+		if(toBeValidated.isConfirmed()){
+			System.out.printf("Block %s has been already validated \n",toBeValidated.getHash().substring(0, 6));
+		}
 		//Make sure that the Block was not Validated by this node before
 		if(getValidatedBlock().contains(toBeValidated)){
 			System.out.printf("Node %s Already Validated Block %s \n",
 					getPublic_address().substring(0,6),toBeValidated.getHash().substring(0, 6));
 			return false;
 		}
-
+		//toBeValidated.display();
 		ArrayList<Transaction> transactions = toBeValidated.getTransaction();
 		boolean confirmedTransactions = false;
 
 		//Make Sure no Tampers Were Made 
+		System.out.println("Testing Merkle Root: "+toBeValidated.getMerkle_root());
+		System.out.println("Testing # of Transactions: "+transactions.size());
 		boolean legitMerkle = SHA256.validateMerkle(toBeValidated.getMerkle_root(),transactions);
 		if(!legitMerkle){
-			validatedBlock.add(toBeValidated);
+			getValidatedBlock().add(toBeValidated);
 			System.out.println("Merkle Root Mismatch by Node "+getPublic_address().substring(0, 6));
 			return false;
 		}
@@ -148,7 +178,7 @@ public class Node{
 		for(int i=0; i<transactions.size();i++){
 			if(!transactions.get(i).isConfirmed()){
 				System.out.println("Not All Transactions were Verified by Node "+getPublic_address().substring(0, 6));
-				validatedBlock.add(toBeValidated);
+				getValidatedBlock().add(toBeValidated);
 				return false;
 			}
 		}
@@ -160,8 +190,11 @@ public class Node{
 			getValidatedBlock().add(toBeValidated);
 			System.out.println(getPublic_address().substring(0, 6)+" Validated Block "+toBeValidated.getHash().substring(0, 6));
 		}
-		if(toBeValidated.isConfirmed())
+		if(toBeValidated.isConfirmed()){
+			broadcastConfirmedBlock(toBeValidated);
 			System.out.println(toBeValidated.getHash().substring(0, 6)+" is 100% Valid");
+		}
+
 		return (confirmedTransactions && legitMerkle);
 
 	}
@@ -246,7 +279,7 @@ public class Node{
 		}
 		System.out.println(minNode+" Is you nearest Node with a distance of "+Math.round(min));
 
-		//Set The Nearted Node
+		//Set The Nearest Node
 		if(nearest!=null)
 			setNearest_node(nearest);
 
@@ -330,29 +363,109 @@ public class Node{
 				getNetwork().getNodes().get(ref).getUnvalidatedTransactionBuffer().add(transaction);
 				System.out.printf("Node %s chose Node %s to Validate \n",getPublic_address().substring(0, 6),
 						getNetwork().getNodes().get(ref).getPublic_address().substring(0, 6));
+				//Requesting Validation
+				getNetwork().getNodes().get(ref).ValidateTransactions();
 				used.add(ref);
 				audience--;
-		
+
 			}
 		}
 
 
 
 	}
-	public void broadcastConfirmedTransaction(){
+	public void broadcastConfirmedTransaction(Transaction transaction){
+		//TODO use gossip protocol for this part
+		System.out.println("Pepsi");
+		for(int i=0;i<getNetwork().getNodes().size();i++){
+			getNetwork().getNodes().get(i).getValidatedTransactionBuffer().add(transaction);
+			//System.out.printf("The Transaction Buffer %d has a size of %d\n",i,getNetwork().getNodes().get(i).getValidatedTransactionBuffer().size());
+		}
+		System.out.printf("Transaction %s Successfuly broadcasted to %d Nodes \n",
+				transaction.getHash().substring(0, 6),getNetwork().getNodes().size());
+	}
+	public void broadcastConfirmedBlock(Block block){
+		//TODO use gossip protocol for this part
+		for(int i=0;i<getNetwork().getNodes().size();i++){
+			getNetwork().getNodes().get(i).getBlockVotingBuffer().add(block);
+		}
+		System.out.printf("Blck %s Successfuly broadcasted to %d Nodes \n",
+				block.getHash().substring(0, 6),getNetwork().getNodes().size());
+	}
+	public Block formBlockFromBuffer(){
+		//TODO use gossip protocol here
+		Block block = new Block(0,"",2,getValidatedTransactionBuffer(),getPublic_address());
+		System.out.printf("Node %s is Forming Block\n",getPublic_address().substring(0, 6));
+		for(int i=0;i<getNetwork().getNodes().size();i++ ){
+			getNetwork().getNodes().get(i).getUnvalidatedBlockBuffer().add(block);
+			//Ask Others to Validate The Block
+			System.out.printf("Requesting Node %s to Validate Block %s\n",
+					getNetwork().getNodes().get(i).getPublic_address().substring(0, 6),
+					block.getHash().substring(0,6));
+			getNetwork().getNodes().get(i).ValidateBlocks();
+			//System.out.println("Checkpoint");
+		}		
+		getValidatedTransactionBuffer().clear();
+
+		return block;
+	}
+	public Block voteBlock(Block selection, int index){
+		int totalVotes =0;
+		//Will Choose a winner if (n/2)+1 Nodes have Voted
+		if(getBlockVotingBuffer().isEmpty()){
+			System.out.println("There is Nothing to Vote for");
+			return null;
+		}
+		else if(!getBlockVotingBuffer().contains(selection)){
+			System.out.println("This Block Does not Exist");
+			return null;
+		}
+		else if(getVotedBlocks().contains(selection)){
+			System.out.println("You Already Voted For this Block");
+			return null;
+		}
+		if(getBlockVotingBuffer().contains(selection)){
+			System.out.printf("Node %s Has Voted form Block %s\n",getPublic_address().substring(0,6),selection.getHash().substring(0, 6));
+			int c = getBlockVotingBuffer().indexOf(selection);
+			for(int i=0; i<getNetwork().getNodes().size();i++){
+				getNetwork().getNodes().get(i).getBlockVotingBuffer().get(c).setVotes(getBlockVotingBuffer().get(c).getVotes()+1);
+			}
+			for(int i=0; i<getBlockVotingBuffer().size();i++){
+				if(totalVotes>(getNetwork().getNodes().size()/2)){
+					return getMaxVotes();
+				}
+				totalVotes = totalVotes + getBlockVotingBuffer().get(i).getVotes();
+				System.out.println("The Total Number of Votes is "+totalVotes);
+			}
+		}
+
+		return null;
+
 
 	}
-	public void formBlockFromBuffer(){
-
+	public Block voteRandomBlock(){
+		//TODO I Can Vote for my own Block
+		int size = getBlockVotingBuffer().size();
+		int vote = CustomMath.randomIntExclude(0, size);
+		return voteBlock(getBlockVotingBuffer().get(vote),vote);
 	}
-	public void binFaultyBlock(){
-
+	public Block getMaxVotes(){
+		int max=0;
+		Block theOne = null;
+		for(int i=0; i<getBlockVotingBuffer().size();i++){
+			int votes = getBlockVotingBuffer().get(i).getVotes();
+			if(max<=votes){
+				max=votes;
+				theOne = getBlockVotingBuffer().get(i);
+			}
+		}
+		System.out.printf("Block %s Has Won this Voting Round\n", theOne.getHash().substring(0, 6));
+		awardMiner(theOne.getCreator());
+		return theOne;
 	}
-	public void binFaultyTransaction(){
-
-	}
-	public void signalTransactionFlush(){
-
+	public void awardMiner(String name){
+		//TODO will be discussed in meeting
+		System.out.printf("The Node %s will Receiver it's Mining Award Shortly",name.substring(0, 6));
 	}
 
 	public String getPublic_address() {
@@ -453,6 +566,12 @@ public class Node{
 	}
 	public void setBlockVotingBuffer(ArrayList<Block> blockVotingBuffer) {
 		this.blockVotingBuffer = blockVotingBuffer;
+	}
+	public ArrayList<Block> getVotedBlocks() {
+		return votedBlocks;
+	}
+	public void setVotedBlocks(ArrayList<Block> votedBlocks) {
+		this.votedBlocks = votedBlocks;
 	}
 
 }
