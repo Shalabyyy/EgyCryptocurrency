@@ -108,11 +108,21 @@ public class DecentralizedNetwork {
 		}
 	}
 
-	//TODO Use a Transaction Buffer 
-	public void forgeBlock(){
-	}
-	//TODO
-	private void pureDeposit(){
+	
+	public Block getMaxVotes(){
+		int max=0;
+		Block theOne = null;
+		for(int i=0; i<nodes.get(0).getBlockVotingBuffer().size();i++){
+			int votes = nodes.get(0).getBlockVotingBuffer().get(i).getVotes();
+			if(max<=votes){
+				max=votes;
+				theOne = nodes.get(0).getBlockVotingBuffer().get(i);
+			}
+		}
+		System.out.printf("Block %s Has Won this Voting Round\n", theOne.getHash().substring(0, 6));
+		nodes.get(0).awardMiner(theOne.getCreator());
+		return theOne;
+	}	private void pureDeposit(){
 
 	}
 	//TODO
@@ -240,15 +250,12 @@ public class DecentralizedNetwork {
 		for(int i=0; i<nodes.size();i++)
 			nodes.get(i).formBlockFromBuffer();
 	}
-	public Block collectVotingResults(){
-		Block block = null;
+	public void collectVotingResults(){
 		for(int i=0; i<nodes.size();i++){
-			block = nodes.get(i).voteRandomBlock();
-			if(block!= null)
-				return block;
+			nodes.get(i).voteRandomBlockV2();
+			
 		}
 			
-		return block;
 	}
 	public static void TestNetwork2(){
 		long startTime = System.currentTimeMillis();
@@ -320,10 +327,11 @@ public class DecentralizedNetwork {
 
 		System.out.println("\nRequesting Block Vote \n");
 		// TODO I preferred to do this here instead at the node for the sake of the demo
-		Block firstBlock =network.collectVotingResults();
+		network.collectVotingResults();
+		Block firstBlock = node1.getMaxVotes();
 		System.out.printf("Block %s will bed added to the blockchain \n",firstBlock.getHash().substring(0, 6));
 		network.chain.addBlock(firstBlock);
-
+		
 		//TODO Assign Block Forging to Miner Nodes
 		//TODO Proof of work is Disabled in this Simulation
 		//TODO change *blockValidationsNeeded* to support scalabilty

@@ -277,7 +277,7 @@ public class Node{
 			}
 
 		}
-		System.out.println(minNode+" Is you nearest Node with a distance of "+Math.round(min));
+		System.out.println(minNode+" Is you nearest Node with a distance of "+min);
 
 		//Set The Nearest Node
 		if(nearest!=null)
@@ -384,14 +384,6 @@ public class Node{
 		System.out.printf("Transaction %s Successfuly broadcasted to %d Nodes \n",
 				transaction.getHash().substring(0, 6),getNetwork().getNodes().size());
 	}
-	public void broadcastConfirmedBlock(Block block){
-		//TODO use gossip protocol for this part
-		for(int i=0;i<getNetwork().getNodes().size();i++){
-			getNetwork().getNodes().get(i).getBlockVotingBuffer().add(block);
-		}
-		System.out.printf("Blck %s Successfuly broadcasted to %d Nodes \n",
-				block.getHash().substring(0, 6),getNetwork().getNodes().size());
-	}
 	public Block formBlockFromBuffer(){
 		//TODO use gossip protocol here
 		Block block = new Block(0,"",2,getValidatedTransactionBuffer(),getPublic_address());
@@ -409,7 +401,37 @@ public class Node{
 
 		return block;
 	}
+	public void broadcastConfirmedBlock(Block block){
+		//TODO use gossip protocol for this part
+		
+		for(int i=0;i<getNetwork().getNodes().size();i++){
+			//block.display();
+			getNetwork().getNodes().get(i).getBlockVotingBuffer().add(block);
+		}
+		System.out.printf("Block %s Successfuly broadcasted to %d Nodes \n",
+				block.getHash().substring(0, 6),getNetwork().getNodes().size());
+	}
+
+	public void voteBlockV2(int index){
+		/*selection.display();
+		System.out.println("Displaying selction");*/
+		int totalVotes =0;
+		//Will Choose a winner if (n/2)+1 Nodes have Voted
+		//	System.out.printf("Node %s Has Voted form Block %s\n",getPublic_address().substring(0,6),selection.getHash().substring(0, 6));
+			int c = index;
+			for(int i=0; i<getNetwork().getNodes().size();i++){
+				getNetwork().getNodes().get(i).getBlockVotingBuffer().get(c).setVotes(getBlockVotingBuffer().get(c).getVotes()+1);
+			}
+			System.out.println("The Total Number of Votes is "+totalVotes);
+			
+		
+
+		return ;
+
+
+	}
 	public Block voteBlock(Block selection, int index){
+		selection.display();
 		int totalVotes =0;
 		//Will Choose a winner if (n/2)+1 Nodes have Voted
 		if(getBlockVotingBuffer().isEmpty()){
@@ -448,6 +470,12 @@ public class Node{
 		int size = getBlockVotingBuffer().size();
 		int vote = CustomMath.randomIntExclude(0, size);
 		return voteBlock(getBlockVotingBuffer().get(vote),vote);
+	}
+	public void voteRandomBlockV2(){
+		//TODO I Can Vote for my own Block
+		int size = getBlockVotingBuffer().size();
+		int vote = CustomMath.randomIntExclude(0, size);
+		voteBlockV2(vote);
 	}
 	public Block getMaxVotes(){
 		int max=0;
