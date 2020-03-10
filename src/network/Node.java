@@ -403,7 +403,7 @@ public class Node{
 	}
 	public void broadcastConfirmedBlock(Block block){
 		//TODO use gossip protocol for this part
-		
+		System.out.println("LOLOLOLOLOLOLOLOLO");
 		for(int i=0;i<getNetwork().getNodes().size();i++){
 			//block.display();
 			getNetwork().getNodes().get(i).getBlockVotingBuffer().add(block);
@@ -420,6 +420,7 @@ public class Node{
 		//	System.out.printf("Node %s Has Voted form Block %s\n",getPublic_address().substring(0,6),selection.getHash().substring(0, 6));
 			int c = index;
 			for(int i=0; i<getNetwork().getNodes().size();i++){
+				//getNetwork().getNodes().get(i).getBlockVotingBuffer().get(c).display();
 				getNetwork().getNodes().get(i).getBlockVotingBuffer().get(c).setVotes(getBlockVotingBuffer().get(c).getVotes()+1);
 			}
 			System.out.println("The Total Number of Votes is "+totalVotes);
@@ -482,12 +483,16 @@ public class Node{
 		Block theOne = null;
 		for(int i=0; i<getBlockVotingBuffer().size();i++){
 			int votes = getBlockVotingBuffer().get(i).getVotes();
-			if(max<=votes){
+			if(max<votes){
 				max=votes;
 				theOne = getBlockVotingBuffer().get(i);
+				//theOne.display();
+				//System.out.println("************GETMAXVOTES**************");
 			}
 		}
 		System.out.printf("Block %s Has Won this Voting Round\n", theOne.getHash().substring(0, 6));
+		
+		theOne.display();
 		awardMiner(theOne.getCreator());
 		return theOne;
 	}

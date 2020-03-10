@@ -328,7 +328,7 @@ public class DecentralizedNetwork {
 		System.out.println("\nRequesting Block Vote \n");
 		// TODO I preferred to do this here instead at the node for the sake of the demo
 		network.collectVotingResults();
-		Block firstBlock = node1.getMaxVotes();
+		Block firstBlock = node2.getMaxVotes();
 		System.out.printf("Block %s will bed added to the blockchain \n",firstBlock.getHash().substring(0, 6));
 		network.chain.addBlock(firstBlock);
 		
